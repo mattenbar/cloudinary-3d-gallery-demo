@@ -153,7 +153,7 @@
     .tour-link span { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; color: #5c7183; background: #edf2f6; font-size: 9px; }
     .tour-link:hover, .tour-link.active { color: white; background: var(--navy); }
     .tour-link:hover span, .tour-link.active span { color: var(--navy); background: var(--cyan); }
-    .capability-section { scroll-margin-top: 74px; }
+    .capability-section { scroll-margin-top: 104px; }
     .section-heading { grid-column: 1 / -1; display: flex; align-items: flex-end; justify-content: space-between; gap: 26px; padding: 4px 2px 2px; }
     .section-heading-copy { max-width: 720px; }
     .step-kicker { color: var(--blue-deep); font-size: 10px; font-weight: 840; letter-spacing: .15em; text-transform: uppercase; }
@@ -319,7 +319,7 @@
       margin: 54px 0;
       border-radius: var(--radius);
       overflow: hidden;
-      scroll-margin-top: 74px;
+      scroll-margin-top: 104px;
     }
     .lab-head {
       padding: 25px 28px;
@@ -390,10 +390,10 @@
 
     .feature-section { margin: 54px 0; padding: clamp(24px, 4vw, 42px); border: 1px solid #e1e7ec; border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
     .feature-section .section-heading { margin-bottom: 24px; }
-    .feature-body { display: grid; grid-template-columns: minmax(360px, 1.1fr) minmax(300px, .72fr); gap: 28px; align-items: stretch; }
-    .feature-viewer { position: relative; min-height: 0; aspect-ratio: 8 / 5; overflow: hidden; border: 1px solid #dce4ea; border-radius: 14px; background: #f5f8fa; }
+    .feature-body { min-width: 0; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px, .72fr); gap: 28px; align-items: start; }
+    .feature-viewer { position: relative; width: 100%; min-width: 0; min-height: 0; aspect-ratio: 8 / 5; overflow: hidden; border: 1px solid #dce4ea; border-radius: 14px; background: #f5f8fa; }
     #texture-gallery, #optimization-gallery { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .feature-guide { display: flex; flex-direction: column; padding: 24px; border: 1px solid #dce4ea; border-radius: 14px; background: #fbfcfd; }
+    .feature-guide { min-width: 0; display: flex; flex-direction: column; padding: 24px; border: 1px solid #dce4ea; border-radius: 14px; background: #fbfcfd; }
     .feature-guide h3 { margin: 0 0 8px; font-size: 22px; letter-spacing: -.035em; }
     .feature-guide > p { margin: 0 0 22px; color: #66798a; font-size: 12px; line-height: 1.6; }
     .guided-action { margin-bottom: 22px; padding: 14px; border-radius: 10px; color: #405b70; background: #eef6ff; font-size: 11px; line-height: 1.55; }
@@ -432,7 +432,10 @@
     .size-bar { display: block; width: 100%; height: 100%; border-radius: inherit; background: #8397a8; transition: width .35s ease; }
     .size-bar.optimized { width: 74.2%; background: var(--blue); }
     .size-note { margin: 10px 0 0; color: #587187; font-size: 9px; line-height: 1.45; }
-    .source-gallery { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .source-gallery { position: relative; width: 100%; height: auto; aspect-ratio: 8 / 5; align-self: center; }
+    .viewer-effect-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 5px 0 20px; padding: 13px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .viewer-effect-row strong { display: block; margin-bottom: 3px; font-size: 11px; }
+    .viewer-effect-row span { display: block; color: #7b8b98; font-size: 9px; line-height: 1.4; }
     .derived-control.is-disabled { opacity: .46; }
     .derived-control.is-disabled input, .derived-control.is-disabled select, .derived-control.is-disabled button { pointer-events: none; }
 
@@ -626,6 +629,10 @@
             <button class="swatch" data-finish="silver" aria-label="Silver" aria-pressed="false" type="button"></button>
             <button class="swatch" data-finish="crimson" aria-label="Crimson" aria-pressed="false" type="button"></button>
           </div>
+          <div class="viewer-effect-row">
+            <div><strong>Interactive 3D shadows</strong><span>Rendered by the Product Gallery viewer</span></div>
+            <button class="switch" id="viewer-shadow-toggle" type="button" aria-label="Toggle interactive 3D shadows" aria-pressed="true"></button>
+          </div>
           <div class="tech-proof">
             <div><span>Transformation</span><code>e_swap_image</code></div>
             <div><span>Texture index</span><code>index_0</code></div>
@@ -649,7 +656,7 @@
         <div class="feature-guide">
           <div class="guided-action"><strong>Customer action</strong>Choose Transparent PNG to expose the cutout, then enter another background public ID and select Apply.</div>
           <h3>Background output</h3>
-          <p>Background replacement applies to 3D-derived still images. The final composition is delivered by Cloudinary—not added with page CSS.</p>
+          <p>Background replacement applies to 3D-derived still images. The interactive Product Gallery does not support a transformed background image behind its live GLB model.</p>
           <div class="background-input">
             <label for="background-public-id">Background image public ID</label>
             <div class="background-input-row">
@@ -693,7 +700,7 @@
             <button class="format-tab" data-mode="mp4" role="tab" type="button">360 MP4</button>
             <button class="format-tab" id="format-3d-tab" data-mode="glb" role="tab" type="button">GLB + Draco</button>
           </div>
-          <div class="guided-action"><strong>Customer action</strong>Rotate the interactive source first. Then choose JPG still and move the camera sliders to create a new derived asset.</div>
+          <div class="guided-action"><strong>Customer action</strong>Rotate the interactive source first. Then choose JPG still, move the camera, and toggle Studio shadow &amp; light to add <code>e_light</code>.</div>
 
           <div class="control">
             <div class="control-top"><label for="model-source-select">Transformation model</label><output class="value-chip" id="model-count">1 model</output></div>
@@ -723,6 +730,10 @@
             <select id="environment"><option value="neutral">Neutral studio</option><option value="pillars">Architectural pillars</option></select>
           </div>
           <div class="switch-row derived-control"><span>Studio shadow &amp; light</span><button class="switch" id="light-toggle" type="button" aria-label="Toggle light effect" aria-pressed="false"></button></div>
+          <div class="control derived-control">
+            <div class="control-top"><label for="shadow-intensity">Derived shadow intensity</label><output class="value-chip" id="shadow-intensity-value">40%</output></div>
+            <input id="shadow-intensity" type="range" min="0" max="100" value="40" step="5" />
+          </div>
 
           <div class="url-box">
             <div class="url-label">Live delivery URL <button class="copy-url" id="copy-url" type="button">Copy URL</button></div>
@@ -830,9 +841,10 @@
     const campaignBackgrounds = {
       racetrack: { label: 'Racetrack pit lane', publicId: 'arx1-racetrack_kjslp4' }
     };
-    const state = { mode: 'viewer', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false, sourceIndex: 0, finish: 'carbon' };
+    const state = { mode: 'viewer', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false, shadowIntensity: 40, sourceIndex: 0, finish: 'carbon' };
     let backgroundState = 'racetrack';
     let customBackgroundPublicId = campaignBackgrounds.racetrack.publicId;
+    let viewerShadows = true;
     const sampleConfig = {
       cloudName: 'demo',
       images: ['cld-sample'],
@@ -1001,7 +1013,7 @@
           container: '#product-gallery',
           cloudName: assetConfig.cloudName,
           mediaAssets: galleryAssets(),
-          ar3dProps: { autoRotate: true, shadows: true, showZoomButtons: true },
+          ar3dProps: { autoRotate: true, shadows: viewerShadows, showZoomButtons: true },
           aspectRatio: '4:3',
           carouselStyle: assetCount() > 1 ? 'thumbnails' : 'none',
           carouselLocation: 'left',
@@ -1189,7 +1201,7 @@
       const source = selectedSource.split('/').map(encodeURIComponent).join('/');
       const texture = textureTransformation();
       const texturePrefix = texture ? texture + '/' : '';
-      const light = state.light && state.mode !== 'glb' ? '/e_light' : '';
+      const light = state.light && state.mode !== 'glb' ? '/e_light:shadowintensity_' + state.shadowIntensity : '';
       if (state.mode === 'viewer') return selectedSourceIsFbx() ? base + texturePrefix + 'f_usdz/' + source : base + texturePrefix + 'fl_draco/f_glb/' + source;
       if (state.mode === 'webp') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_webp,fl_animated,q_auto/' + source;
       if (state.mode === 'mp4') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_mp4,fl_animated,q_auto/' + source;
@@ -1267,7 +1279,7 @@
       } else {
         badge.textContent = 'Derived JPG · live';
       }
-      meta.textContent = cameraEffect(state.mode !== 'jpg') + ' · f_' + state.mode;
+      meta.textContent = cameraEffect(state.mode !== 'jpg') + (state.light ? ' · e_light:' + state.shadowIntensity : '') + ' · f_' + state.mode;
       media.addEventListener('load', () => loader.classList.remove('visible'));
       media.addEventListener('loadeddata', () => loader.classList.remove('visible'));
       media.addEventListener('error', () => {
@@ -1323,6 +1335,7 @@
       bindRange('up', 'up', '°');
       bindRange('zoom', 'zoom', '×');
       bindRange('exposure', 'exposure', '');
+      bindRange('shadow-intensity', 'shadowIntensity', '%');
 
       $('#environment').addEventListener('change', (event) => { state.env = event.target.value; scheduleRender(); });
       $('#model-source-select').addEventListener('change', (event) => {
@@ -1360,6 +1373,15 @@
         if (event.key === 'Enter') { event.preventDefault(); $('#apply-background').click(); }
       });
 
+      $('#viewer-shadow-toggle').addEventListener('click', (event) => {
+        viewerShadows = event.currentTarget.getAttribute('aria-pressed') !== 'true';
+        event.currentTarget.setAttribute('aria-pressed', String(viewerShadows));
+        initializeTextureGallery();
+        initializeOptimizationGallery();
+        if (state.mode === 'viewer') renderPreview();
+        showToast('Interactive shadows ' + (viewerShadows ? 'enabled' : 'disabled'));
+      });
+
       document.querySelectorAll('.format-tab').forEach((button) => button.addEventListener('click', () => {
         document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.remove('active'));
         button.classList.add('active');
@@ -1382,8 +1404,8 @@
       });
 
       $('#reset-controls').addEventListener('click', () => {
-        Object.assign(state, { mode: 'viewer', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false });
-        [['right',25,'°'],['up',8,'°'],['zoom',1.1,'×'],['exposure',1,'']].forEach(([id,value,suffix]) => {
+        Object.assign(state, { mode: 'viewer', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false, shadowIntensity: 40 });
+        [['right',25,'°'],['up',8,'°'],['zoom',1.1,'×'],['exposure',1,''],['shadow-intensity',40,'%']].forEach(([id,value,suffix]) => {
           $('#' + id).value = value; $('#' + id + '-value').textContent = value + suffix;
         });
         $('#environment').value = 'neutral';
