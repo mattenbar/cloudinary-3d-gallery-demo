@@ -145,11 +145,29 @@
     }
     .crumbs span { color: var(--ink); font-weight: 700; }
 
+    .tour-intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; padding: 8px 0 24px; }
+    .tour-intro h1 { max-width: 760px; margin: 8px 0 0; }
+    .tour-intro p { max-width: 470px; margin: 0; color: #5c6f80; font-size: 13px; line-height: 1.6; }
+    .tour-nav { position: sticky; top: 0; z-index: 20; display: grid; grid-template-columns: repeat(5, 1fr); margin: 0 0 24px; padding: 8px; border: 1px solid #dce4ea; border-radius: 14px; background: rgba(255,255,255,.94); box-shadow: 0 12px 35px rgba(7,27,46,.09); backdrop-filter: blur(14px); }
+    .tour-link { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 8px 10px; border-radius: 9px; color: #627485; font-size: 11px; font-weight: 760; text-decoration: none; }
+    .tour-link span { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; color: #5c7183; background: #edf2f6; font-size: 9px; }
+    .tour-link:hover, .tour-link.active { color: white; background: var(--navy); }
+    .tour-link:hover span, .tour-link.active span { color: var(--navy); background: var(--cyan); }
+    .capability-section { scroll-margin-top: 74px; }
+    .section-heading { grid-column: 1 / -1; display: flex; align-items: flex-end; justify-content: space-between; gap: 26px; padding: 4px 2px 2px; }
+    .section-heading-copy { max-width: 720px; }
+    .step-kicker { color: var(--blue-deep); font-size: 10px; font-weight: 840; letter-spacing: .15em; text-transform: uppercase; }
+    .section-heading h2 { margin: 7px 0 0; font-size: clamp(26px, 3.4vw, 39px); letter-spacing: -.045em; }
+    .section-heading p { max-width: 490px; margin: 0; color: #66798a; font-size: 12px; line-height: 1.55; }
+    .try-card { min-width: 250px; padding: 13px 15px; border-left: 3px solid var(--blue); border-radius: 0 9px 9px 0; color: #526b7e; background: #edf6ff; font-size: 11px; line-height: 1.5; }
+    .try-card strong { color: var(--ink); }
+
     .product-layout {
       display: grid;
       grid-template-columns: minmax(0, 1.42fr) minmax(330px, .72fr);
       gap: 22px;
       align-items: stretch;
+      margin-bottom: 54px;
     }
 
     .viewer-card, .details-card, .lab {
@@ -285,6 +303,7 @@
       box-shadow: 0 10px 24px rgba(23,120,242,.22);
     }
     .primary:hover { background: var(--blue-deep); }
+    .primary-link { display: block; text-align: center; text-decoration: none; }
     .microcopy { text-align: center; color: #80909f; font-size: 10px; margin: 10px 0 0; }
 
     .capabilities { margin: 24px 0 0; padding-top: 22px; border-top: 1px solid var(--line); }
@@ -297,9 +316,10 @@
     .capability span { display: block; color: #7a8996; font-size: 10px; line-height: 1.4; }
 
     .lab {
-      margin: 24px 0 60px;
+      margin: 54px 0;
       border-radius: var(--radius);
       overflow: hidden;
+      scroll-margin-top: 74px;
     }
     .lab-head {
       padding: 25px 28px;
@@ -333,7 +353,7 @@
     .preview-meta { position: absolute; left: 18px; bottom: 18px; z-index: 2; padding: 8px 10px; background: rgba(6,25,43,.9); color: #d8e8f4; border-radius: 8px; font: 10px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; }
 
     .transform-controls { padding: 25px 28px; background: white; }
-    .format-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 24px; }
+    .format-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-bottom: 24px; }
     .format-tab { border: 1px solid #d9e2e9; padding: 9px 5px; border-radius: 8px; background: white; color: #5c6d7b; font-size: 10px; font-weight: 780; }
     .format-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
 
@@ -368,6 +388,38 @@
     .format-list div { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 9px; }
     .format-list span { color: #83909c; }
 
+    .feature-section { margin: 54px 0; padding: clamp(24px, 4vw, 42px); border: 1px solid #e1e7ec; border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
+    .feature-section .section-heading { margin-bottom: 24px; }
+    .feature-body { display: grid; grid-template-columns: minmax(360px, 1.1fr) minmax(300px, .72fr); gap: 28px; align-items: stretch; }
+    .feature-viewer { position: relative; min-height: 530px; overflow: hidden; border: 1px solid #dce4ea; border-radius: 14px; background: #f5f8fa; }
+    #texture-gallery, #optimization-gallery { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .feature-guide { display: flex; flex-direction: column; padding: 24px; border: 1px solid #dce4ea; border-radius: 14px; background: #fbfcfd; }
+    .feature-guide h3 { margin: 0 0 8px; font-size: 22px; letter-spacing: -.035em; }
+    .feature-guide > p { margin: 0 0 22px; color: #66798a; font-size: 12px; line-height: 1.6; }
+    .guided-action { margin-bottom: 22px; padding: 14px; border-radius: 10px; color: #405b70; background: #eef6ff; font-size: 11px; line-height: 1.55; }
+    .guided-action strong { display: block; margin-bottom: 3px; color: var(--blue-deep); }
+    .feature-guide .swatches { margin-bottom: 12px; }
+    .tech-proof { display: grid; gap: 9px; margin: 8px 0 24px; }
+    .tech-proof div { display: flex; justify-content: space-between; gap: 16px; padding-top: 9px; border-top: 1px solid var(--line); font-size: 11px; }
+    .tech-proof span { color: #8493a0; }
+    .tech-proof code { color: #25445d; font-size: 10px; text-align: right; }
+    .next-step { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-radius: 10px; color: white; background: var(--navy); font-size: 11px; font-weight: 780; text-decoration: none; }
+    .next-step:hover { background: var(--navy-2); }
+    .background-stage { position: relative; display: grid; place-items: center; min-height: 530px; overflow: hidden; border: 1px solid #dce4ea; border-radius: 14px; background-color: #eef3f7; background-image: linear-gradient(45deg,#dfe7ed 25%,transparent 25%),linear-gradient(-45deg,#dfe7ed 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#dfe7ed 75%),linear-gradient(-45deg,transparent 75%,#dfe7ed 75%); background-size: 24px 24px; background-position: 0 0,0 12px,12px -12px,-12px 0; }
+    .background-stage .gallery-loading { z-index: 2; }
+    .background-stage img { position: relative; z-index: 1; width: 100%; height: 100%; max-height: 590px; object-fit: contain; display: block; }
+    .background-options { display: grid; gap: 9px; margin-bottom: 20px; }
+    .background-option { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 13px; border: 1px solid #d8e1e8; border-radius: 10px; color: #4f6577; background: white; font-size: 11px; font-weight: 720; }
+    .background-option.active { color: var(--blue-deep); border-color: #8fc1fb; background: #edf6ff; }
+    .background-option small { color: #8a98a4; font-size: 9px; font-weight: 650; }
+    .optimization-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 4px 0 24px; }
+    .optimization-card { padding: 13px; border: 1px solid #dce4ea; border-radius: 10px; background: white; }
+    .optimization-card strong { display: block; margin-bottom: 4px; font-size: 11px; }
+    .optimization-card code { color: var(--blue-deep); font-size: 9px; }
+    .source-gallery { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .derived-control.is-disabled { opacity: .46; }
+    .derived-control.is-disabled input, .derived-control.is-disabled select, .derived-control.is-disabled button { pointer-events: none; }
+
     .toast { position: fixed; right: 22px; bottom: 22px; z-index: 100; padding: 12px 16px; color: white; background: var(--navy); border-radius: 9px; box-shadow: 0 12px 35px rgba(0,0,0,.22); font-size: 12px; transform: translateY(80px); opacity: 0; transition: .25s ease; }
     .toast.show { transform: translateY(0); opacity: 1; }
 
@@ -398,11 +450,13 @@
     .save-config { border: 0; border-radius: 9px; padding: 11px 17px; background: var(--blue); color: white; font-size: 11px; font-weight: 780; }
 
     @media (max-width: 980px) {
+      .tour-intro, .section-heading { align-items: flex-start; flex-direction: column; }
       .product-layout { grid-template-columns: 1fr; }
       .viewer-card { min-height: 600px; }
       .lab-body { grid-template-columns: 1fr; }
       .transform-controls { order: -1; }
       .lab-head { align-items: flex-start; flex-direction: column; }
+      .feature-body { grid-template-columns: 1fr; }
     }
     @media (max-width: 620px) {
       .page { width: min(100% - 22px, 1480px); }
@@ -412,6 +466,8 @@
       .live-pill { display: none; }
       .configure-button { padding: 8px 10px; font-size: 10px; }
       .viewer-card { min-height: 520px; }
+      .tour-nav { grid-template-columns: repeat(5, minmax(48px, 1fr)); overflow-x: auto; }
+      .tour-link { flex-direction: column; gap: 4px; padding: 7px 3px; font-size: 8px; }
       .gallery-shell { min-height: 410px; }
       .viewer-foot { align-items: flex-start; flex-direction: column; }
       .details-card { padding: 24px 20px; }
@@ -420,6 +476,9 @@
       .control-grid { grid-template-columns: 1fr; gap: 0; }
       .preview-media, .transform-preview { min-height: 420px; }
       .asset-grid { grid-template-columns: 1fr; }
+      .feature-section { padding: 20px 14px; }
+      .feature-viewer, .background-stage { min-height: 420px; }
+      .optimization-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -465,7 +524,27 @@
   <main class="page">
     <nav class="crumbs" aria-label="Breadcrumb">Demos&nbsp;&nbsp;/&nbsp;&nbsp; Product Gallery&nbsp;&nbsp;/&nbsp;&nbsp; <span>3D commerce</span></nav>
 
-    <section class="product-layout" aria-label="Product gallery demonstration">
+    <header class="tour-intro">
+      <div>
+        <div class="eyebrow">Guided customer demonstration</div>
+        <h1>One 3D asset.<br>Every commerce experience.</h1>
+      </div>
+      <p>Follow the five steps in order. Each section isolates one Cloudinary capability, gives the customer one action to try, and shows the result from the same ARX-1 source model.</p>
+    </header>
+
+    <nav class="tour-nav" aria-label="Demo capability tour">
+      <a class="tour-link active" data-tour-link href="#gallery-capability"><span>1</span>Gallery</a>
+      <a class="tour-link" data-tour-link href="#texture-capability"><span>2</span>Textures</a>
+      <a class="tour-link" data-tour-link href="#background-capability"><span>3</span>Backgrounds</a>
+      <a class="tour-link" data-tour-link href="#transformation-lab"><span>4</span>Transforms</a>
+      <a class="tour-link" data-tour-link href="#optimization-capability"><span>5</span>Optimize</a>
+    </nav>
+
+    <section class="product-layout capability-section" id="gallery-capability" aria-labelledby="gallery-title">
+      <div class="section-heading">
+        <div class="section-heading-copy"><div class="step-kicker">Step 1 · Product Gallery widget</div><h2 id="gallery-title">Explore every product asset in one gallery</h2></div>
+        <div class="try-card"><strong>Try this:</strong> Select the 3D thumbnail, then drag the helmet to rotate and use the zoom controls.</div>
+      </div>
       <article class="viewer-card">
         <div class="viewer-head">
           <h2>Cloudinary Product Gallery</h2>
@@ -500,7 +579,7 @@
           <button class="swatch" data-finish="crimson" aria-label="Crimson" aria-pressed="false" type="button"></button>
         </div>
 
-        <button class="primary" id="lab-jump" type="button">Open transformation lab</button>
+        <a class="primary primary-link" id="lab-jump" href="#texture-capability">Continue to texture swaps</a>
         <p class="microcopy">No SDK keys required — Cloudinary public demo cloud</p>
 
         <div class="capabilities">
@@ -511,41 +590,100 @@
       </aside>
     </section>
 
+    <section class="feature-section capability-section" id="texture-capability" aria-labelledby="texture-title">
+      <div class="section-heading">
+        <div class="section-heading-copy"><div class="step-kicker">Step 2 · Dynamic textures</div><h2 id="texture-title">Swap the material on the live 3D model</h2></div>
+        <p>The geometry never changes. Cloudinary replaces the indexed albedo texture and delivers a new interactive GLB from the same source package.</p>
+      </div>
+      <div class="feature-body">
+        <div class="feature-viewer">
+          <div class="gallery-loading" id="texture-gallery-loading"><div><div class="spinner"></div><strong>Loading texture-ready 3D model</strong></div></div>
+          <div id="texture-gallery" aria-label="Interactive texture swap demonstration"></div>
+        </div>
+        <div class="feature-guide">
+          <div class="guided-action"><strong>Customer action</strong>Select Silver or Crimson, then drag the model to inspect the new material from every angle.</div>
+          <h3>Finish: <span id="texture-finish-value">Carbon black</span></h3>
+          <p>Each selection rebuilds the interactive viewer with a real <code>e_swap_image</code> transformation.</p>
+          <div class="swatches" aria-label="Interactive 3D texture options">
+            <button class="swatch active" data-finish="carbon" aria-label="Carbon black" aria-pressed="true" type="button"></button>
+            <button class="swatch" data-finish="silver" aria-label="Silver" aria-pressed="false" type="button"></button>
+            <button class="swatch" data-finish="crimson" aria-label="Crimson" aria-pressed="false" type="button"></button>
+          </div>
+          <div class="tech-proof">
+            <div><span>Transformation</span><code>e_swap_image</code></div>
+            <div><span>Texture index</span><code>index_0</code></div>
+            <div><span>Output</span><code>f_glb</code></div>
+          </div>
+          <a class="next-step" href="#background-capability"><span>Next: compose a campaign background</span><span>→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section capability-section" id="background-capability" aria-labelledby="background-title">
+      <div class="section-heading">
+        <div class="section-heading-copy"><div class="step-kicker">Step 3 · Backgrounds and compositing</div><h2 id="background-title">Turn the 3D model into a campaign scene</h2></div>
+        <p>Cloudinary renders the model with transparency, crops the racetrack to the output canvas, and applies it as an image underlay.</p>
+      </div>
+      <div class="feature-body">
+        <div class="background-stage">
+          <div class="gallery-loading" id="background-loading"><div><div class="spinner"></div><strong>Composing campaign image</strong></div></div>
+          <img id="background-preview" alt="Cloudinary-derived ARX-1 helmet campaign image" />
+        </div>
+        <div class="feature-guide">
+          <div class="guided-action"><strong>Customer action</strong>Choose Transparent PNG to expose the cutout, then select Racetrack pit lane to place it into the final scene.</div>
+          <h3>Background output</h3>
+          <p>These are delivered assets generated from the 3D source—not CSS backgrounds added by this page.</p>
+          <div class="background-options" aria-label="Campaign background options">
+            <button class="background-option active" data-background="racetrack" type="button"><span>Racetrack pit lane</span><small>u_racetrack</small></button>
+            <button class="background-option" data-background="transparent" type="button"><span>Transparent PNG</span><small>f_png</small></button>
+            <button class="background-option" data-background="studio" type="button"><span>Studio white</span><small>f_jpg</small></button>
+          </div>
+          <div class="tech-proof">
+            <div><span>Composition</span><code id="background-proof">b_transparent · u_racetrack</code></div>
+            <div><span>Source</span><code>DamagedHelmet3D.gltz</code></div>
+          </div>
+          <a class="next-step" href="#transformation-lab"><span>Next: generate channel-ready outputs</span><span>→</span></a>
+        </div>
+      </div>
+    </section>
+
     <section class="lab" id="transformation-lab" aria-labelledby="lab-title">
       <div class="lab-head">
-        <div><div class="lab-kicker">From source model to campaign asset</div><h2 id="lab-title">3D Transformation Lab</h2></div>
-        <p>Move the camera and switch output formats. Every change composes a real Cloudinary transformation URL from the same uploaded 3D asset.</p>
+        <div><div class="lab-kicker">Step 4 · 3D transformations</div><h2 id="lab-title">From interactive model to channel-ready asset</h2></div>
+        <p>Start with the live 3D source. Then choose JPG, animated WebP, or MP4 and move the camera to generate a real delivery URL.</p>
       </div>
       <div class="lab-body">
         <div class="transform-preview">
-          <div class="derived-badge" id="derived-badge">Derived JPG · live</div>
+          <div class="derived-badge" id="derived-badge">Interactive 3D source · drag to rotate</div>
           <div class="preview-media" id="preview-media"></div>
           <div class="preview-loader" id="preview-loader"><div><div class="spinner"></div><small>Generating on first request…</small></div></div>
-          <div class="preview-meta" id="preview-meta">e_camera · f_jpg · q_auto</div>
+          <div class="preview-meta" id="preview-meta">fl_draco · f_glb · interactive</div>
         </div>
 
         <div class="transform-controls">
           <div class="format-tabs" role="tablist" aria-label="Output format">
-            <button class="format-tab active" data-mode="jpg" role="tab" type="button">JPG still</button>
+            <button class="format-tab active" data-mode="viewer" role="tab" type="button">Interactive 3D</button>
+            <button class="format-tab" data-mode="jpg" role="tab" type="button">JPG still</button>
             <button class="format-tab" data-mode="webp" role="tab" type="button">360 WebP</button>
             <button class="format-tab" data-mode="mp4" role="tab" type="button">360 MP4</button>
             <button class="format-tab" id="format-3d-tab" data-mode="glb" role="tab" type="button">GLB + Draco</button>
           </div>
+          <div class="guided-action"><strong>Customer action</strong>Rotate the interactive source first. Then choose JPG still and move the camera sliders to create a new derived asset.</div>
 
           <div class="control">
             <div class="control-top"><label for="model-source-select">Transformation model</label><output class="value-chip" id="model-count">1 model</output></div>
             <select id="model-source-select" aria-label="Select model to transform"></select>
           </div>
 
-          <div class="control">
+          <div class="control derived-control">
             <div class="control-top"><label for="right">Horizontal camera</label><output class="value-chip" id="right-value">25°</output></div>
             <input id="right" type="range" min="-180" max="180" value="25" step="5" />
           </div>
-          <div class="control">
+          <div class="control derived-control">
             <div class="control-top"><label for="up">Vertical camera</label><output class="value-chip" id="up-value">8°</output></div>
             <input id="up" type="range" min="-60" max="60" value="8" step="2" />
           </div>
-          <div class="control-grid">
+          <div class="control-grid derived-control">
             <div class="control">
               <div class="control-top"><label for="zoom">Zoom</label><output class="value-chip" id="zoom-value">1.1×</output></div>
               <input id="zoom" type="range" min="0.5" max="2.2" value="1.1" step="0.1" />
@@ -555,15 +693,11 @@
               <input id="exposure" type="range" min="0.2" max="2" value="1" step="0.1" />
             </div>
           </div>
-          <div class="control">
+          <div class="control derived-control">
             <div class="control-top"><label for="environment">Lighting environment</label></div>
             <select id="environment"><option value="neutral">Neutral studio</option><option value="pillars">Architectural pillars</option></select>
           </div>
-          <div class="control">
-            <div class="control-top"><label for="campaign-background">Campaign background (JPG)</label></div>
-            <select id="campaign-background"><option value="racetrack">Racetrack pit lane</option><option value="none">Studio white</option></select>
-          </div>
-          <div class="switch-row"><span>Studio shadow &amp; light</span><button class="switch" id="light-toggle" type="button" aria-label="Toggle light effect" aria-pressed="false"></button></div>
+          <div class="switch-row derived-control"><span>Studio shadow &amp; light</span><button class="switch" id="light-toggle" type="button" aria-label="Toggle light effect" aria-pressed="false"></button></div>
 
           <div class="url-box">
             <div class="url-label">Live delivery URL <button class="copy-url" id="copy-url" type="button">Copy URL</button></div>
@@ -573,6 +707,37 @@
             <button class="reset" id="reset-controls" type="button">↺ Reset controls</button>
             <a class="docs-link" href="https://cloudinary.com/documentation/transformations_on_3d_models" target="_blank" rel="noreferrer">View Cloudinary 3D docs ↗</a>
           </div>
+          <a class="next-step" href="#optimization-capability"><span>Next: inspect optimized delivery</span><span>→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section capability-section" id="optimization-capability" aria-labelledby="optimization-title">
+      <div class="section-heading">
+        <div class="section-heading-copy"><div class="step-kicker">Step 5 · Optimization and delivery</div><h2 id="optimization-title">Deliver the right 3D asset to every channel</h2></div>
+        <p>The customer still gets a rotatable model while Cloudinary handles format conversion, mesh compression, derived assets, and global CDN delivery.</p>
+      </div>
+      <div class="feature-body">
+        <div class="feature-viewer">
+          <div class="gallery-loading" id="optimization-gallery-loading"><div><div class="spinner"></div><strong>Loading optimized 3D delivery</strong></div></div>
+          <div id="optimization-gallery" aria-label="Optimized interactive 3D delivery"></div>
+        </div>
+        <div class="feature-guide">
+          <div class="guided-action"><strong>Customer action</strong>Rotate and zoom the final model. Explain that this interactive experience is delivered from the transformed source through Cloudinary's CDN.</div>
+          <h3>One source, multiple outputs</h3>
+          <p>Select output formats in Step 4 while keeping one master model in the DAM.</p>
+          <div class="optimization-grid">
+            <div class="optimization-card"><strong>Web 3D</strong><code>f_glb · fl_draco</code></div>
+            <div class="optimization-card"><strong>Apple AR</strong><code>f_usdz</code></div>
+            <div class="optimization-card"><strong>Campaign still</strong><code>f_jpg · q_auto</code></div>
+            <div class="optimization-card"><strong>360 motion</strong><code>f_webp / f_mp4</code></div>
+          </div>
+          <div class="tech-proof">
+            <div><span>Delivery</span><code>Global CDN</code></div>
+            <div><span>Caching</span><code>Derived assets cached</code></div>
+            <div><span>Source management</span><code>Single 3D master</code></div>
+          </div>
+          <a class="next-step" href="#gallery-capability"><span>Restart the guided demo</span><span>↻</span></a>
         </div>
       </div>
     </section>
@@ -634,7 +799,8 @@
     const campaignBackgrounds = {
       racetrack: { label: 'Racetrack pit lane', publicId: 'arx1-racetrack_kjslp4' }
     };
-    const state = { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', background: 'racetrack', light: false, sourceIndex: 0, finish: 'carbon' };
+    const state = { mode: 'viewer', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false, sourceIndex: 0, finish: 'carbon' };
+    let backgroundState = 'racetrack';
     const sampleConfig = {
       cloudName: 'demo',
       images: ['cld-sample'],
@@ -654,6 +820,9 @@
     const cloneConfig = (config) => ({ ...config, images: [...config.images], videos: [...config.videos], models: [...config.models], spins: [...config.spins], sourcePaths: [...config.sourcePaths] });
     let assetConfig = cloneConfig(defaultConfig);
     let gallery;
+    let textureGallery;
+    let transformSourceGallery;
+    let optimizationGallery;
     let renderTimer;
 
     const $ = (selector) => document.querySelector(selector);
@@ -813,6 +982,58 @@
       }
     }
 
+    function singleModelAsset(optimized = false) {
+      const publicId = assetConfig.models[state.sourceIndex] || assetConfig.models[0];
+      if (!publicId) return null;
+      const asset = galleryAsset(publicId, '3d');
+      if (optimized && Array.isArray(asset.transformation?.transformation)) {
+        asset.transformation.transformation.splice(-1, 0, { flags: 'draco' });
+      }
+      return asset;
+    }
+
+    function initializeSingleModelGallery(container, loading, previous, optimized = false) {
+      if (previous?.destroy) { try { previous.destroy(); } catch (_) {} }
+      const target = $(container);
+      if (!target) return null;
+      target.innerHTML = '';
+      if (loading) loading.style.display = 'grid';
+      const asset = singleModelAsset(optimized);
+      if (!asset || !window.cloudinary?.galleryWidget) {
+        if (loading) loading.innerHTML = '<div><strong>Interactive model unavailable.</strong></div>';
+        return null;
+      }
+      try {
+        const instance = window.cloudinary.galleryWidget({
+          container,
+          cloudName: assetConfig.cloudName,
+          mediaAssets: [asset],
+          ar3dProps: { autoRotate: true, shadows: true, showZoomButtons: true },
+          aspectRatio: '1:1',
+          carouselStyle: 'none',
+          preload: []
+        });
+        instance.render();
+        if (loading) setTimeout(() => { loading.style.display = 'none'; }, 1300);
+        return instance;
+      } catch (error) {
+        if (loading) loading.innerHTML = '<div><strong>Unable to load this 3D view.</strong><br><small>' + String(error.message || error) + '</small></div>';
+        return null;
+      }
+    }
+
+    function initializeTextureGallery() {
+      textureGallery = initializeSingleModelGallery('#texture-gallery', $('#texture-gallery-loading'), textureGallery);
+    }
+
+    function initializeOptimizationGallery() {
+      optimizationGallery = initializeSingleModelGallery('#optimization-gallery', $('#optimization-gallery-loading'), optimizationGallery, true);
+    }
+
+    function initializeTransformSourceGallery() {
+      transformSourceGallery = initializeSingleModelGallery('#transform-source-gallery', null, transformSourceGallery, true);
+    }
+
     function cameraEffect(includeFrames = false) {
       const parts = [
         'up_' + state.up,
@@ -839,17 +1060,43 @@
       return '$finish_ref:!' + reference + '!/e_swap_image:image_$finish;index_0';
     }
 
-    function backgroundTransformation(size) {
-      const selectedSource = assetConfig.sourcePaths[state.sourceIndex] || '';
-      const background = campaignBackgrounds[state.background];
-      if (!background || assetConfig.cloudName !== 'doxfstysv' || !/DamagedHelmet3D_htkxiw/i.test(selectedSource)) return '';
-      const reference = background.publicId.replace(/\//g, ':');
-      return 'f_png/b_transparent/u_' + reference + '/c_fill,w_' + size + ',h_' + size + '/fl_layer_apply/f_jpg,q_auto';
-    }
-
     function updateGalleryFinish() {
       const activeIndex = gallery?.getActiveIndex?.();
       initializeGallery(Number.isInteger(activeIndex) ? activeIndex : 0);
+      initializeTextureGallery();
+      initializeOptimizationGallery();
+      if (state.mode === 'viewer') renderPreview();
+      renderBackgroundDemo();
+    }
+
+    function buildBackgroundUrl(mode = backgroundState) {
+      const selectedSource = assetConfig.sourcePaths[state.sourceIndex];
+      if (!selectedSource) return '';
+      const base = 'https://res.cloudinary.com/' + assetConfig.cloudName + '/image/upload/';
+      const source = selectedSource.split('/').map(encodeURIComponent).join('/');
+      const texture = textureTransformation();
+      const prefix = texture ? texture + '/' : '';
+      const render = 'c_scale,w_1000/e_camera:up_8;right_25;zoom_1.1;env_neutral;exposure_1.0/';
+      if (mode === 'transparent') return base + prefix + render + 'f_png/' + source;
+      if (mode === 'racetrack') {
+        const background = campaignBackgrounds.racetrack.publicId.replace(/\//g, ':');
+        return base + prefix + render + 'f_png/b_transparent/u_' + background + '/c_fill,w_1000,h_1000/fl_layer_apply/f_jpg,q_auto/' + source;
+      }
+      return base + prefix + render + 'f_jpg,q_auto/' + source;
+    }
+
+    function renderBackgroundDemo() {
+      const image = $('#background-preview');
+      const loading = $('#background-loading');
+      if (!image || !loading) return;
+      const url = buildBackgroundUrl();
+      loading.style.display = 'grid';
+      image.onload = () => { loading.style.display = 'none'; };
+      image.onerror = () => { loading.innerHTML = '<div><strong>Background render is still processing.</strong></div>'; };
+      image.src = url;
+      document.querySelectorAll('.background-option').forEach((button) => button.classList.toggle('active', button.dataset.background === backgroundState));
+      const proof = backgroundState === 'racetrack' ? 'b_transparent · u_racetrack' : backgroundState === 'transparent' ? 'f_png · alpha' : 'f_jpg · q_auto';
+      $('#background-proof').textContent = proof;
     }
 
     function buildUrl() {
@@ -860,11 +1107,11 @@
       const texture = textureTransformation();
       const texturePrefix = texture ? texture + '/' : '';
       const light = state.light && state.mode !== 'glb' ? '/e_light' : '';
+      if (state.mode === 'viewer') return selectedSourceIsFbx() ? base + texturePrefix + 'f_usdz/' + source : base + texturePrefix + 'fl_draco/f_glb/' + source;
       if (state.mode === 'webp') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_webp,fl_animated,q_auto/' + source;
       if (state.mode === 'mp4') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_mp4,fl_animated,q_auto/' + source;
       if (state.mode === 'glb') return selectedSourceIsFbx() ? base + texturePrefix + 'f_usdz/' + source : base + texturePrefix + 'fl_draco/f_glb/' + source;
-      const background = backgroundTransformation(1100);
-      return base + texturePrefix + 'c_scale,w_1100/' + cameraEffect(false) + light + '/' + (background || 'f_jpg,q_auto') + '/' + source;
+      return base + texturePrefix + 'c_scale,w_1100/' + cameraEffect(false) + light + '/f_jpg,q_auto/' + source;
     }
 
     function formatCard() {
@@ -882,11 +1129,20 @@
       '</article>';
     }
 
+    function setDerivedControlsEnabled(enabled) {
+      document.querySelectorAll('.derived-control').forEach((control) => control.classList.toggle('is-disabled', !enabled));
+      document.querySelectorAll('.derived-control input, .derived-control select, .derived-control button').forEach((element) => { element.disabled = !enabled; });
+    }
+
     function renderPreview() {
       const url = buildUrl();
       const badge = $('#derived-badge');
       const meta = $('#preview-meta');
       loader.classList.remove('visible');
+      if (state.mode !== 'viewer' && transformSourceGallery?.destroy) {
+        try { transformSourceGallery.destroy(); } catch (_) {}
+        transformSourceGallery = null;
+      }
       preview.innerHTML = '';
 
       if (!url) {
@@ -898,6 +1154,17 @@
       }
 
       deliveryUrl.textContent = url;
+
+      if (state.mode === 'viewer') {
+        setDerivedControlsEnabled(false);
+        badge.textContent = 'Interactive 3D source · drag to rotate';
+        meta.textContent = selectedSourceIsFbx() ? 'f_usdz · AR-ready' : 'fl_draco · f_glb · interactive';
+        preview.innerHTML = '<div class="source-gallery" id="transform-source-gallery" aria-label="Interactive 3D transformation source"></div>';
+        initializeTransformSourceGallery();
+        return;
+      }
+
+      setDerivedControlsEnabled(true);
 
       if (state.mode === 'glb') {
         badge.textContent = selectedSourceIsFbx() ? 'Converted 3D asset' : 'Optimized 3D asset';
@@ -917,7 +1184,7 @@
       } else {
         badge.textContent = 'Derived JPG · live';
       }
-      meta.textContent = cameraEffect(state.mode !== 'jpg') + (state.mode === 'jpg' && backgroundTransformation(1100) ? ' · u_racetrack' : '') + ' · f_' + state.mode;
+      meta.textContent = cameraEffect(state.mode !== 'jpg') + ' · f_' + state.mode;
       media.addEventListener('load', () => loader.classList.remove('visible'));
       media.addEventListener('loadeddata', () => loader.classList.remove('visible'));
       media.addEventListener('error', () => {
@@ -943,19 +1210,49 @@
       });
     }
 
+    function initializeCapabilityViews() {
+      initializeTextureGallery();
+      initializeOptimizationGallery();
+      renderBackgroundDemo();
+    }
+
+    function initializeTourNavigation() {
+      const links = [...document.querySelectorAll('[data-tour-link]')];
+      const sections = links.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+      if (!('IntersectionObserver' in window)) return;
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === '#' + visible.target.id));
+      }, { rootMargin: '-18% 0px -62% 0px', threshold: [0, .2, .6] });
+      sections.forEach((section) => observer.observe(section));
+    }
+
     function initializeDemo() {
       loadAssetConfig();
       syncConfigUI();
       initializeGallery();
+      initializeCapabilityViews();
       renderPreview();
+      initializeTourNavigation();
       bindRange('right', 'right', '°');
       bindRange('up', 'up', '°');
       bindRange('zoom', 'zoom', '×');
       bindRange('exposure', 'exposure', '');
 
       $('#environment').addEventListener('change', (event) => { state.env = event.target.value; scheduleRender(); });
-      $('#campaign-background').addEventListener('change', (event) => { state.background = event.target.value; renderPreview(); });
-      $('#model-source-select').addEventListener('change', (event) => { state.sourceIndex = Number(event.target.value); update3dOutputLabel(); renderPreview(); });
+      $('#model-source-select').addEventListener('change', (event) => {
+        state.sourceIndex = Number(event.target.value);
+        update3dOutputLabel();
+        initializeCapabilityViews();
+        renderPreview();
+      });
+
+      document.querySelectorAll('.background-option').forEach((button) => button.addEventListener('click', () => {
+        backgroundState = button.dataset.background;
+        renderBackgroundDemo();
+        showToast(button.querySelector('span').textContent + ' background applied');
+      }));
 
       document.querySelectorAll('.format-tab').forEach((button) => button.addEventListener('click', () => {
         document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.remove('active'));
@@ -979,18 +1276,17 @@
       });
 
       $('#reset-controls').addEventListener('click', () => {
-        Object.assign(state, { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', background: 'racetrack', light: false });
+        Object.assign(state, { mode: 'viewer', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false });
         [['right',25,'°'],['up',8,'°'],['zoom',1.1,'×'],['exposure',1,'']].forEach(([id,value,suffix]) => {
           $('#' + id).value = value; $('#' + id + '-value').textContent = value + suffix;
         });
         $('#environment').value = 'neutral';
-        $('#campaign-background').value = 'racetrack';
         $('#light-toggle').setAttribute('aria-pressed', 'false');
-        document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.mode === 'jpg'));
+        document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.mode === 'viewer'));
         renderPreview();
       });
 
-      $('#lab-jump').addEventListener('click', () => $('#transformation-lab').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      $('#lab-jump').addEventListener('click', (event) => { event.preventDefault(); $('#texture-capability').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
       $('#open-config').addEventListener('click', () => { syncConfigUI(); $('#config-dialog').showModal(); });
       $('#close-config').addEventListener('click', () => $('#config-dialog').close());
       $('#config-dialog').addEventListener('click', (event) => { if (event.target === event.currentTarget) event.currentTarget.close(); });
@@ -1010,22 +1306,23 @@
           spins: parseList('#spin-tags'),
           sourcePaths: parseList('#source-paths')
         };
-        saveAssetConfig(); syncConfigUI(); initializeGallery(); renderPreview(); $('#config-dialog').close(); showToast('Gallery connected to ' + assetConfig.cloudName);
+        saveAssetConfig(); syncConfigUI(); initializeGallery(); initializeCapabilityViews(); renderPreview(); $('#config-dialog').close(); showToast('Gallery connected to ' + assetConfig.cloudName);
       });
       $('#use-demo').addEventListener('click', () => {
         assetConfig = cloneConfig(sampleConfig);
-        saveAssetConfig(); syncConfigUI(); initializeGallery(); renderPreview(); $('#config-dialog').close(); showToast('Public sample loaded');
+        saveAssetConfig(); syncConfigUI(); initializeGallery(); initializeCapabilityViews(); renderPreview(); $('#config-dialog').close(); showToast('Public sample loaded');
       });
       document.querySelectorAll('.swatch').forEach((swatch) => swatch.addEventListener('click', () => {
         state.finish = swatch.dataset.finish;
         document.querySelectorAll('.swatch').forEach((item) => {
-          const selected = item === swatch;
+          const selected = item.dataset.finish === state.finish;
           item.classList.toggle('active', selected);
           item.setAttribute('aria-pressed', String(selected));
         });
         $('#finish-value').textContent = textureVariants[state.finish].label;
+        $('#texture-finish-value').textContent = textureVariants[state.finish].label;
         updateGalleryFinish();
-        renderPreview();
+        if (state.mode !== 'viewer') renderPreview();
         showToast(textureVariants[state.finish].label + ' texture applied');
       }));
     }
