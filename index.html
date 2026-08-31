@@ -559,6 +559,10 @@
             <div class="control-top"><label for="environment">Lighting environment</label></div>
             <select id="environment"><option value="neutral">Neutral studio</option><option value="pillars">Architectural pillars</option></select>
           </div>
+          <div class="control">
+            <div class="control-top"><label for="campaign-background">Campaign background (JPG)</label></div>
+            <select id="campaign-background"><option value="racetrack">Racetrack pit lane</option><option value="none">Studio white</option></select>
+          </div>
           <div class="switch-row"><span>Studio shadow &amp; light</span><button class="switch" id="light-toggle" type="button" aria-label="Toggle light effect" aria-pressed="false"></button></div>
 
           <div class="url-box">
@@ -627,7 +631,10 @@
       silver: { label: 'Silver', publicId: 'arx1-silver_bju4mf' },
       crimson: { label: 'Crimson', publicId: 'arx1-crimson_ajvbyz' }
     };
-    const state = { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false, sourceIndex: 0, finish: 'carbon' };
+    const campaignBackgrounds = {
+      racetrack: { label: 'Racetrack pit lane', publicId: 'arx1-racetrack_kjslp4' }
+    };
+    const state = { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', background: 'racetrack', light: false, sourceIndex: 0, finish: 'carbon' };
     const sampleConfig = {
       cloudName: 'demo',
       images: ['cld-sample'],
@@ -832,6 +839,14 @@
       return '$finish_ref:!' + reference + '!/e_swap_image:image_$finish;index_0';
     }
 
+    function backgroundTransformation(size) {
+      const selectedSource = assetConfig.sourcePaths[state.sourceIndex] || '';
+      const background = campaignBackgrounds[state.background];
+      if (!background || assetConfig.cloudName !== 'doxfstysv' || !/DamagedHelmet3D_htkxiw/i.test(selectedSource)) return '';
+      const reference = background.publicId.replace(/\//g, ':');
+      return 'f_png/b_transparent/u_' + reference + '/c_fill,w_' + size + ',h_' + size + '/fl_layer_apply/f_jpg,q_auto';
+    }
+
     function updateGalleryFinish() {
       const activeIndex = gallery?.getActiveIndex?.();
       initializeGallery(Number.isInteger(activeIndex) ? activeIndex : 0);
@@ -848,7 +863,8 @@
       if (state.mode === 'webp') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_webp,fl_animated,q_auto/' + source;
       if (state.mode === 'mp4') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_mp4,fl_animated,q_auto/' + source;
       if (state.mode === 'glb') return selectedSourceIsFbx() ? base + texturePrefix + 'f_usdz/' + source : base + texturePrefix + 'fl_draco/f_glb/' + source;
-      return base + texturePrefix + 'c_scale,w_1100/' + cameraEffect(false) + light + '/f_jpg,q_auto/' + source;
+      const background = backgroundTransformation(1100);
+      return base + texturePrefix + 'c_scale,w_1100/' + cameraEffect(false) + light + '/' + (background || 'f_jpg,q_auto') + '/' + source;
     }
 
     function formatCard() {
@@ -901,7 +917,7 @@
       } else {
         badge.textContent = 'Derived JPG · live';
       }
-      meta.textContent = cameraEffect(state.mode !== 'jpg') + ' · f_' + state.mode;
+      meta.textContent = cameraEffect(state.mode !== 'jpg') + (state.mode === 'jpg' && backgroundTransformation(1100) ? ' · u_racetrack' : '') + ' · f_' + state.mode;
       media.addEventListener('load', () => loader.classList.remove('visible'));
       media.addEventListener('loadeddata', () => loader.classList.remove('visible'));
       media.addEventListener('error', () => {
@@ -938,6 +954,7 @@
       bindRange('exposure', 'exposure', '');
 
       $('#environment').addEventListener('change', (event) => { state.env = event.target.value; scheduleRender(); });
+      $('#campaign-background').addEventListener('change', (event) => { state.background = event.target.value; renderPreview(); });
       $('#model-source-select').addEventListener('change', (event) => { state.sourceIndex = Number(event.target.value); update3dOutputLabel(); renderPreview(); });
 
       document.querySelectorAll('.format-tab').forEach((button) => button.addEventListener('click', () => {
@@ -962,11 +979,12 @@
       });
 
       $('#reset-controls').addEventListener('click', () => {
-        Object.assign(state, { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false });
+        Object.assign(state, { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', background: 'racetrack', light: false });
         [['right',25,'°'],['up',8,'°'],['zoom',1.1,'×'],['exposure',1,'']].forEach(([id,value,suffix]) => {
           $('#' + id).value = value; $('#' + id + '-value').textContent = value + suffix;
         });
         $('#environment').value = 'neutral';
+        $('#campaign-background').value = 'racetrack';
         $('#light-toggle').setAttribute('aria-pressed', 'false');
         document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.mode === 'jpg'));
         renderPreview();
