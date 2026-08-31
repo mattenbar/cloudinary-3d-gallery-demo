@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive Cloudinary Product Gallery and 3D transformation demo." />
+  <title>Cloudinary 3D Product Gallery Demo</title>
+  <link rel="preconnect" href="https://res.cloudinary.com" />
+  <link rel="preconnect" href="https://product-gallery.cloudinary.com" />
+  <script src="https://product-gallery.cloudinary.com/latest/all.js" defer></script>
+  <style>
+    :root {
+      --ink: #091b2c;
+      --navy: #06192b;
+      --navy-2: #0b2740;
+      --blue: #1778f2;
+      --blue-deep: #0866d9;
+      --cyan: #6bd7ff;
+      --paper: #f5f7fa;
+      --white: #ffffff;
+      --muted: #677789;
+      --line: #dce3e9;
+      --green: #35d08b;
+      --orange: #ff7b54;
+      --radius: 18px;
+      --shadow: 0 24px 70px rgba(7, 27, 46, 0.12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      min-width: 320px;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+
+    body.access-locked { overflow: hidden; background: var(--navy); }
+    body.access-locked > :not(.access-gate):not(script) { visibility: hidden; }
+    .access-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      color: white;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(23,120,242,.3), transparent 32%),
+        radial-gradient(circle at 82% 75%, rgba(107,215,255,.14), transparent 35%),
+        var(--navy);
+    }
+    .access-gate[hidden] { display: none; }
+    .access-panel {
+      width: min(430px, 100%);
+      padding: clamp(28px, 5vw, 42px);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 20px;
+      background: rgba(6,25,43,.86);
+      box-shadow: 0 30px 100px rgba(0,0,0,.35);
+      backdrop-filter: blur(16px);
+    }
+    .access-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+    .access-brand strong { font-size: 17px; letter-spacing: -.025em; }
+    .access-kicker { color: var(--cyan); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .access-panel h1 { margin: 10px 0 9px; font-size: clamp(31px, 8vw, 44px); line-height: 1; }
+    .access-copy { margin: 0 0 24px; color: #afc2d2; font-size: 13px; line-height: 1.55; }
+    .access-field { display: grid; gap: 8px; }
+    .access-field label { color: #dce8f1; font-size: 11px; font-weight: 750; }
+    .access-row { display: grid; grid-template-columns: 1fr auto; gap: 9px; }
+    .access-row input {
+      min-width: 0;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 9px;
+      padding: 12px 13px;
+      color: white;
+      background: rgba(255,255,255,.08);
+      outline: none;
+    }
+    .access-row input:focus { border-color: #6bb4ff; box-shadow: 0 0 0 3px rgba(23,120,242,.2); }
+    .access-submit { border: 0; border-radius: 9px; padding: 0 17px; color: white; background: var(--blue); font-size: 11px; font-weight: 800; }
+    .access-submit:hover { background: var(--blue-deep); }
+    .access-status { min-height: 18px; margin: 9px 0 0; color: #ffb3a3; font-size: 10px; }
+
+    .topbar {
+      height: 72px;
+      padding: 0 clamp(20px, 5vw, 76px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: white;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .brand-mark { width: 34px; height: 24px; flex: none; }
+    .brand-name { font-size: 18px; font-weight: 780; letter-spacing: -.03em; }
+    .brand-divider { width: 1px; height: 24px; background: rgba(255,255,255,.26); }
+    .brand-product {
+      font-size: 10px;
+      color: #bed0df;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      color: #d8e8f4;
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(53,208,139,.13); }
+    .topbar-actions { display: flex; align-items: center; gap: 9px; }
+    .configure-button {
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: white;
+      background: rgba(255,255,255,.08);
+      font-size: 11px;
+      font-weight: 760;
+    }
+    .configure-button:hover { background: rgba(255,255,255,.14); }
+
+    .page { width: min(1480px, calc(100% - 40px)); margin: 0 auto; }
+    .crumbs {
+      padding: 24px 0 16px;
+      font-size: 12px;
+      color: #7c8a99;
+      letter-spacing: .04em;
+    }
+    .crumbs span { color: var(--ink); font-weight: 700; }
+
+    .product-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.42fr) minmax(330px, .72fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .viewer-card, .details-card, .lab {
+      background: var(--white);
+      border: 1px solid #e3e8ed;
+      box-shadow: var(--shadow);
+    }
+
+    .viewer-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      min-height: 650px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .viewer-head {
+      height: 62px;
+      padding: 0 18px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+    .viewer-head h2 { margin: 0; font-size: 13px; letter-spacing: .01em; }
+    .status { display: flex; align-items: center; gap: 7px; color: #4c6376; font-size: 11px; font-weight: 700; }
+    .status i { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
+
+    .gallery-shell {
+      position: relative;
+      flex: 1;
+      min-height: 520px;
+      background: #f8fafc;
+    }
+    #product-gallery { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .gallery-loading {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 0;
+      color: #6b7d8d;
+      text-align: center;
+      pointer-events: none;
+    }
+    .gallery-notice {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      z-index: 5;
+      display: none;
+      width: min(350px, calc(100% - 140px));
+      padding: 11px 13px;
+      border: 1px solid #f1c891;
+      border-radius: 9px;
+      color: #674315;
+      background: #fff8ec;
+      box-shadow: 0 10px 28px rgba(9,27,44,.12);
+      font-size: 10px;
+      line-height: 1.45;
+      pointer-events: none;
+    }
+    .gallery-notice.show { display: block; }
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 3px solid #d8e2eb;
+      border-top-color: var(--blue);
+      animation: spin .8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .viewer-badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      background: rgba(6,25,43,.92);
+      color: white;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 780;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .cube-icon { width: 14px; height: 14px; }
+
+    .viewer-foot {
+      min-height: 66px;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-top: 1px solid var(--line);
+      background: white;
+    }
+    .gesture { display: flex; align-items: center; gap: 10px; color: #5c6d7d; font-size: 12px; }
+    .gesture svg { color: var(--blue); }
+    .viewer-toggles { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+    .toggle-button {
+      border: 1px solid #dce4eb;
+      border-radius: 9px;
+      padding: 8px 11px;
+      background: #fff;
+      color: #42586b;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .toggle-button[aria-pressed="true"] { color: var(--blue-deep); border-color: #9fc9fb; background: #edf6ff; }
+
+    .details-card { border-radius: var(--radius); padding: clamp(25px, 3vw, 38px); display: flex; flex-direction: column; }
+    .eyebrow { color: var(--blue-deep); font-size: 11px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+    h1 { margin: 15px 0 7px; font-size: clamp(34px, 4vw, 53px); line-height: .98; letter-spacing: -.055em; }
+    .subtitle { color: var(--muted); font-size: 15px; margin: 0 0 20px; }
+    .price-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .price { font-size: 24px; font-weight: 790; letter-spacing: -.03em; }
+    .edition { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #85551b; background: #fff3dc; padding: 6px 8px; border-radius: 6px; }
+    .copy { color: #526577; line-height: 1.62; font-size: 14px; margin: 0 0 22px; }
+
+    .specs { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 22px; }
+    .spec { padding: 14px 15px; min-width: 0; }
+    .spec:nth-child(odd) { border-right: 1px solid var(--line); }
+    .spec:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    .spec-label { color: #84909c; font-size: 9px; font-weight: 780; letter-spacing: .12em; text-transform: uppercase; }
+    .spec-value { margin-top: 5px; font-size: 13px; font-weight: 720; }
+
+    .finish-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+    .finish-label span { color: #7c8995; font-weight: 500; }
+    .swatches { display: flex; gap: 9px; margin-bottom: 23px; }
+    .swatch { width: 33px; height: 33px; border: 2px solid white; box-shadow: 0 0 0 1px #cfd9e2; border-radius: 50%; background: #2b3037; }
+    .swatch:nth-child(2) { background: #a9afb2; }
+    .swatch:nth-child(3) { background: #893737; }
+    .swatch.active { box-shadow: 0 0 0 2px var(--blue); }
+
+    .primary {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 15px 18px;
+      color: white;
+      background: var(--blue);
+      font-weight: 780;
+      box-shadow: 0 10px 24px rgba(23,120,242,.22);
+    }
+    .primary:hover { background: var(--blue-deep); }
+    .microcopy { text-align: center; color: #80909f; font-size: 10px; margin: 10px 0 0; }
+
+    .capabilities { margin: 24px 0 0; padding-top: 22px; border-top: 1px solid var(--line); }
+    .capability { display: flex; gap: 12px; align-items: flex-start; margin: 0 0 13px; }
+    .check {
+      width: 20px; height: 20px; flex: none; border-radius: 50%; display: grid; place-items: center;
+      background: #e7f8f0; color: #148d58; font-size: 11px; font-weight: 900;
+    }
+    .capability strong { display: block; font-size: 12px; margin-bottom: 2px; }
+    .capability span { display: block; color: #7a8996; font-size: 10px; line-height: 1.4; }
+
+    .lab {
+      margin: 24px 0 60px;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .lab-head {
+      padding: 25px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      color: white;
+      background: var(--navy);
+    }
+    .lab-kicker { color: var(--cyan); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .lab-head h2 { margin: 8px 0 0; font-size: clamp(22px, 3vw, 33px); letter-spacing: -.035em; }
+    .lab-head p { margin: 0; color: #acc0d0; max-width: 500px; font-size: 12px; line-height: 1.55; }
+    .lab-body { display: grid; grid-template-columns: minmax(340px, 1.08fr) minmax(360px, .92fr); min-height: 560px; }
+
+    .transform-preview {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 520px;
+      overflow: hidden;
+      background-color: #eef3f7;
+      background-image: linear-gradient(#dce5ec 1px, transparent 1px), linear-gradient(90deg, #dce5ec 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .preview-media { width: 100%; height: 100%; min-height: 520px; display: grid; place-items: center; }
+    .preview-media img, .preview-media video { width: 100%; height: 100%; max-height: 580px; object-fit: contain; display: block; }
+    .preview-loader { position: absolute; inset: 0; display: none; place-items: center; background: rgba(238,243,247,.78); z-index: 3; }
+    .preview-loader.visible { display: grid; }
+    .derived-badge { position: absolute; left: 18px; top: 18px; z-index: 2; padding: 7px 9px; border-radius: 7px; background: white; border: 1px solid #d8e1e8; font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .preview-meta { position: absolute; left: 18px; bottom: 18px; z-index: 2; padding: 8px 10px; background: rgba(6,25,43,.9); color: #d8e8f4; border-radius: 8px; font: 10px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    .transform-controls { padding: 25px 28px; background: white; }
+    .format-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 24px; }
+    .format-tab { border: 1px solid #d9e2e9; padding: 9px 5px; border-radius: 8px; background: white; color: #5c6d7b; font-size: 10px; font-weight: 780; }
+    .format-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+    .control { margin-bottom: 17px; }
+    .control-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .control label { font-size: 11px; font-weight: 730; }
+    .value-chip { min-width: 48px; text-align: center; color: var(--blue-deep); background: #edf6ff; border-radius: 6px; padding: 4px 7px; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
+    input[type="range"] { width: 100%; accent-color: var(--blue); }
+    select { width: 100%; border: 1px solid #d8e1e9; padding: 10px 11px; border-radius: 8px; color: #314a5f; background: white; font-size: 11px; }
+    .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .switch-row { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 13px 0; margin: 4px 0 16px; font-size: 11px; font-weight: 700; }
+    .switch {
+      width: 38px; height: 22px; border: 0; border-radius: 999px; padding: 3px; background: #c8d2db; transition: .2s ease;
+    }
+    .switch::after { content: ""; display: block; width: 16px; height: 16px; border-radius: 50%; background: white; box-shadow: 0 2px 5px rgba(0,0,0,.18); transition: .2s ease; }
+    .switch[aria-pressed="true"] { background: var(--blue); }
+    .switch[aria-pressed="true"]::after { transform: translateX(16px); }
+
+    .url-box { border: 1px solid #dce4ea; border-radius: 10px; overflow: hidden; background: #f8fafb; }
+    .url-label { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; color: #788896; font-size: 9px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; border-bottom: 1px solid #dce4ea; }
+    .copy-url { border: 0; background: transparent; color: var(--blue-deep); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+    #delivery-url { margin: 0; padding: 11px 12px; min-height: 60px; color: #334e62; font: 10px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+    .lab-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 14px; }
+    .reset { border: 0; color: #6e7e8c; background: transparent; padding: 8px 0; font-size: 10px; font-weight: 750; }
+    .docs-link { color: var(--blue-deep); font-size: 10px; font-weight: 750; text-decoration: none; }
+
+    .format-card { width: min(390px, calc(100% - 46px)); padding: 28px; background: white; border: 1px solid #d8e2e9; border-radius: 15px; box-shadow: 0 18px 55px rgba(9,27,44,.12); }
+    .format-icon { width: 43px; height: 43px; display: grid; place-items: center; border-radius: 11px; color: white; background: var(--blue); margin-bottom: 18px; }
+    .format-card h3 { margin: 0 0 7px; font-size: 22px; }
+    .format-card p { color: #71818f; font-size: 12px; line-height: 1.55; margin: 0 0 18px; }
+    .format-list { display: grid; gap: 9px; font-size: 11px; }
+    .format-list div { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 9px; }
+    .format-list span { color: #83909c; }
+
+    .toast { position: fixed; right: 22px; bottom: 22px; z-index: 100; padding: 12px 16px; color: white; background: var(--navy); border-radius: 9px; box-shadow: 0 12px 35px rgba(0,0,0,.22); font-size: 12px; transform: translateY(80px); opacity: 0; transition: .25s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    dialog {
+      width: min(760px, calc(100% - 28px));
+      padding: 0;
+      border: 0;
+      border-radius: 18px;
+      box-shadow: 0 30px 100px rgba(4,18,31,.35);
+      color: var(--ink);
+    }
+    dialog::backdrop { background: rgba(3,17,30,.68); backdrop-filter: blur(4px); }
+    .config-head { padding: 24px 26px 18px; color: white; background: var(--navy); display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+    .config-head h2 { margin: 6px 0 0; font-size: 25px; letter-spacing: -.03em; }
+    .config-head p { margin: 7px 0 0; color: #acc0d0; font-size: 11px; }
+    .dialog-close { border: 1px solid rgba(255,255,255,.2); width: 33px; height: 33px; border-radius: 50%; background: transparent; color: white; font-size: 18px; }
+    .config-form { padding: 24px 26px 26px; }
+    .asset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    .field { margin-bottom: 17px; }
+    .field label { display: block; margin-bottom: 7px; font-size: 11px; font-weight: 760; }
+    .field input, .field textarea { width: 100%; border: 1px solid #d7e0e7; border-radius: 9px; padding: 11px 12px; color: #294257; background: #fbfcfd; font-size: 12px; outline: none; }
+    .field input:focus, .field textarea:focus { border-color: #7fb7f7; box-shadow: 0 0 0 3px rgba(23,120,242,.1); }
+    .field textarea { min-height: 78px; resize: vertical; line-height: 1.5; }
+    .field-help { margin-top: 6px; color: #7a8996; font-size: 10px; line-height: 1.45; }
+    .config-note { margin: 5px 0 20px; padding: 12px 13px; border-left: 3px solid var(--blue); background: #eef6ff; color: #4f687c; font-size: 10px; line-height: 1.55; }
+    .config-actions { display: flex; justify-content: space-between; gap: 10px; }
+    .secondary { border: 1px solid #d7e0e7; border-radius: 9px; padding: 11px 14px; background: white; color: #52697b; font-size: 11px; font-weight: 740; }
+    .save-config { border: 0; border-radius: 9px; padding: 11px 17px; background: var(--blue); color: white; font-size: 11px; font-weight: 780; }
+
+    @media (max-width: 980px) {
+      .product-layout { grid-template-columns: 1fr; }
+      .viewer-card { min-height: 600px; }
+      .lab-body { grid-template-columns: 1fr; }
+      .transform-controls { order: -1; }
+      .lab-head { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 620px) {
+      .page { width: min(100% - 22px, 1480px); }
+      .topbar { height: 62px; padding: 0 14px; }
+      .brand-divider, .brand-product { display: none; }
+      .live-pill { font-size: 9px; padding: 7px 9px; }
+      .live-pill { display: none; }
+      .configure-button { padding: 8px 10px; font-size: 10px; }
+      .viewer-card { min-height: 520px; }
+      .gallery-shell { min-height: 410px; }
+      .viewer-foot { align-items: flex-start; flex-direction: column; }
+      .details-card { padding: 24px 20px; }
+      .lab-head, .transform-controls { padding: 22px 18px; }
+      .format-tabs { grid-template-columns: 1fr 1fr; }
+      .control-grid { grid-template-columns: 1fr; gap: 0; }
+      .preview-media, .transform-preview { min-height: 420px; }
+      .asset-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="access-locked">
+  <section class="access-gate" id="access-gate" aria-labelledby="access-title">
+    <form class="access-panel" id="access-form">
+      <div class="access-brand">
+        <svg class="brand-mark" viewBox="0 0 48 34" fill="none" aria-hidden="true">
+          <path d="M13.6 28.2h22c5.6 0 10.1-4.2 10.1-9.4 0-5-4.1-9.1-9.3-9.4C34.6 4.6 30 1.3 24.5 1.3c-6.6 0-12 4.8-12.9 11-5.1.5-9.1 3.9-9.1 8 0 4.4 4.9 7.9 11.1 7.9Z" fill="#fff"/>
+          <path d="M22.3 10.1 14 24.4h7.3l8.4-14.3h-7.4Zm8.9 0-8.4 14.3h5.1l8.4-14.3h-5.1Z" fill="#1778F2"/>
+        </svg>
+        <strong>Cloudinary</strong>
+      </div>
+      <div class="access-kicker">Private demonstration</div>
+      <h1 id="access-title">ARX-1 3D Lab</h1>
+      <p class="access-copy">Enter the demonstration access code to explore the mixed-media gallery and live 3D transformations.</p>
+      <div class="access-field">
+        <label for="access-password">Access code</label>
+        <div class="access-row">
+          <input id="access-password" type="password" autocomplete="current-password" required autofocus />
+          <button class="access-submit" type="submit">Enter demo</button>
+        </div>
+      </div>
+      <p class="access-status" id="access-status" role="alert" aria-live="polite"></p>
+    </form>
+  </section>
+  <header class="topbar">
+    <div class="brand" aria-label="Cloudinary immersive commerce demo">
+      <svg class="brand-mark" viewBox="0 0 48 34" fill="none" aria-hidden="true">
+        <path d="M13.6 28.2h22c5.6 0 10.1-4.2 10.1-9.4 0-5-4.1-9.1-9.3-9.4C34.6 4.6 30 1.3 24.5 1.3c-6.6 0-12 4.8-12.9 11-5.1.5-9.1 3.9-9.1 8 0 4.4 4.9 7.9 11.1 7.9Z" fill="#fff"/>
+        <path d="M22.3 10.1 14 24.4h7.3l8.4-14.3h-7.4Zm8.9 0-8.4 14.3h5.1l8.4-14.3h-5.1Z" fill="#1778F2"/>
+      </svg>
+      <span class="brand-name">Cloudinary</span>
+      <span class="brand-divider"></span>
+      <span class="brand-product">Immersive commerce lab</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="configure-button" id="open-config" type="button">Use my assets</button>
+      <div class="live-pill"><span class="live-dot"></span>Live API demo</div>
+    </div>
+  </header>
+
+  <main class="page">
+    <nav class="crumbs" aria-label="Breadcrumb">Demos&nbsp;&nbsp;/&nbsp;&nbsp; Product Gallery&nbsp;&nbsp;/&nbsp;&nbsp; <span>3D commerce</span></nav>
+
+    <section class="product-layout" aria-label="Product gallery demonstration">
+      <article class="viewer-card">
+        <div class="viewer-head">
+          <h2>Cloudinary Product Gallery</h2>
+          <div class="status"><i></i><span id="asset-status">demo · 1 model</span></div>
+        </div>
+        <div class="gallery-shell">
+          <div class="gallery-loading" id="gallery-loading">
+            <div><div class="spinner"></div><strong>Loading interactive 3D model</strong><br><small>Powered by Cloudinary Product Gallery</small></div>
+          </div>
+          <div id="product-gallery" aria-label="Interactive 3D product viewer"></div>
+          <div class="gallery-notice" id="gallery-notice"><strong>The first GLB conversion is taking longer than expected.</strong><br>This gallery requests <code>f_glb</code> from the existing GLTZ asset. Cloudinary caches the derived GLB after it is generated; you can keep switching between assets while it processes.</div>
+        </div>
+      </article>
+
+      <aside class="details-card">
+        <div class="eyebrow">Apex laboratory / 2026</div>
+        <h1>ARX-1<br>Carbon</h1>
+        <p class="subtitle">Adaptive composite racing helmet</p>
+        <div class="price-row"><span class="price">$899</span><span class="edition">Limited edition</span></div>
+        <p class="copy">Explore every material, contour, and component in an interactive viewer—then create channel-ready images and video from the same 3D source.</p>
+
+        <div class="specs" aria-label="Product specifications">
+          <div class="spec"><div class="spec-label">Shell</div><div class="spec-value">Carbon composite</div></div>
+          <div class="spec"><div class="spec-label">Weight</div><div class="spec-value">1,280 g</div></div>
+          <div class="spec"><div class="spec-label">Model</div><div class="spec-value">GLB / PBR</div></div>
+          <div class="spec"><div class="spec-label">Delivery</div><div class="spec-value">Global CDN</div></div>
+        </div>
+
+        <div class="finish-label">Finish <span id="finish-value">Carbon black</span></div>
+        <div class="swatches" aria-label="Finish options">
+          <button class="swatch active" data-finish="carbon" aria-label="Carbon black" aria-pressed="true" type="button"></button>
+          <button class="swatch" data-finish="silver" aria-label="Silver" aria-pressed="false" type="button"></button>
+          <button class="swatch" data-finish="crimson" aria-label="Crimson" aria-pressed="false" type="button"></button>
+        </div>
+
+        <button class="primary" id="lab-jump" type="button">Open transformation lab</button>
+        <p class="microcopy">No SDK keys required — Cloudinary public demo cloud</p>
+
+        <div class="capabilities">
+          <div class="capability"><div class="check">✓</div><div><strong>Native 3D interaction</strong><span>Rotate, zoom, shadows, and AR-ready controls.</span></div></div>
+          <div class="capability"><div class="check">✓</div><div><strong>One model, every channel</strong><span>Generate stills, animated WebP, MP4, GLB, and USDZ.</span></div></div>
+          <div class="capability"><div class="check">✓</div><div><strong>Dynamic delivery URLs</strong><span>Camera, lighting, exposure, format, and quality on demand.</span></div></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="lab" id="transformation-lab" aria-labelledby="lab-title">
+      <div class="lab-head">
+        <div><div class="lab-kicker">From source model to campaign asset</div><h2 id="lab-title">3D Transformation Lab</h2></div>
+        <p>Move the camera and switch output formats. Every change composes a real Cloudinary transformation URL from the same uploaded 3D asset.</p>
+      </div>
+      <div class="lab-body">
+        <div class="transform-preview">
+          <div class="derived-badge" id="derived-badge">Derived JPG · live</div>
+          <div class="preview-media" id="preview-media"></div>
+          <div class="preview-loader" id="preview-loader"><div><div class="spinner"></div><small>Generating on first request…</small></div></div>
+          <div class="preview-meta" id="preview-meta">e_camera · f_jpg · q_auto</div>
+        </div>
+
+        <div class="transform-controls">
+          <div class="format-tabs" role="tablist" aria-label="Output format">
+            <button class="format-tab active" data-mode="jpg" role="tab" type="button">JPG still</button>
+            <button class="format-tab" data-mode="webp" role="tab" type="button">360 WebP</button>
+            <button class="format-tab" data-mode="mp4" role="tab" type="button">360 MP4</button>
+            <button class="format-tab" id="format-3d-tab" data-mode="glb" role="tab" type="button">GLB + Draco</button>
+          </div>
+
+          <div class="control">
+            <div class="control-top"><label for="model-source-select">Transformation model</label><output class="value-chip" id="model-count">1 model</output></div>
+            <select id="model-source-select" aria-label="Select model to transform"></select>
+          </div>
+
+          <div class="control">
+            <div class="control-top"><label for="right">Horizontal camera</label><output class="value-chip" id="right-value">25°</output></div>
+            <input id="right" type="range" min="-180" max="180" value="25" step="5" />
+          </div>
+          <div class="control">
+            <div class="control-top"><label for="up">Vertical camera</label><output class="value-chip" id="up-value">8°</output></div>
+            <input id="up" type="range" min="-60" max="60" value="8" step="2" />
+          </div>
+          <div class="control-grid">
+            <div class="control">
+              <div class="control-top"><label for="zoom">Zoom</label><output class="value-chip" id="zoom-value">1.1×</output></div>
+              <input id="zoom" type="range" min="0.5" max="2.2" value="1.1" step="0.1" />
+            </div>
+            <div class="control">
+              <div class="control-top"><label for="exposure">Exposure</label><output class="value-chip" id="exposure-value">1.0</output></div>
+              <input id="exposure" type="range" min="0.2" max="2" value="1" step="0.1" />
+            </div>
+          </div>
+          <div class="control">
+            <div class="control-top"><label for="environment">Lighting environment</label></div>
+            <select id="environment"><option value="neutral">Neutral studio</option><option value="pillars">Architectural pillars</option></select>
+          </div>
+          <div class="switch-row"><span>Studio shadow &amp; light</span><button class="switch" id="light-toggle" type="button" aria-label="Toggle light effect" aria-pressed="false"></button></div>
+
+          <div class="url-box">
+            <div class="url-label">Live delivery URL <button class="copy-url" id="copy-url" type="button">Copy URL</button></div>
+            <pre id="delivery-url"></pre>
+          </div>
+          <div class="lab-actions">
+            <button class="reset" id="reset-controls" type="button">↺ Reset controls</button>
+            <a class="docs-link" href="https://cloudinary.com/documentation/transformations_on_3d_models" target="_blank" rel="noreferrer">View Cloudinary 3D docs ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite">Delivery URL copied</div>
+
+  <dialog id="config-dialog" aria-labelledby="config-title">
+    <div class="config-head">
+      <div><div class="lab-kicker">No credentials required</div><h2 id="config-title">Use your Cloudinary assets</h2><p>Populate the actual Product Gallery widget with your images, video, spin sets, and 3D models.</p></div>
+      <button class="dialog-close" id="close-config" type="button" aria-label="Close">×</button>
+    </div>
+    <form class="config-form" id="config-form">
+      <div class="field">
+        <label for="cloud-name">Cloud name</label>
+        <input id="cloud-name" name="cloudName" autocomplete="off" placeholder="your-cloud-name" required />
+      </div>
+      <div class="asset-grid">
+        <div class="field">
+          <label for="image-ids">Image public IDs or tags</label>
+          <textarea id="image-ids" name="imageIds" placeholder="products/hero&#10;tag:summer-collection"></textarea>
+          <div class="field-help">One per line. Prefix a tag with <strong>tag:</strong>.</div>
+        </div>
+        <div class="field">
+          <label for="video-ids">Video public IDs or tags</label>
+          <textarea id="video-ids" name="videoIds" placeholder="products/overview&#10;tag:product-videos"></textarea>
+          <div class="field-help">Videos play inside the Product Gallery.</div>
+        </div>
+        <div class="field">
+          <label for="model-ids">3D model public IDs</label>
+          <textarea id="model-ids" name="modelIds" placeholder="products/chair_3d&#10;products/table_3d" required></textarea>
+          <div class="field-help">Public IDs without extensions. The gallery requests <strong>f_glb</strong> for each 3D model, so GLTZ sources do not need to be re-uploaded.</div>
+        </div>
+        <div class="field">
+          <label for="spin-tags">360 spin-set tags</label>
+          <textarea id="spin-tags" name="spinTags" placeholder="product-blue-360&#10;product-red-360"></textarea>
+          <div class="field-help">Each tag becomes one interactive spin asset.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="source-paths">Transformation source paths</label>
+        <textarea id="source-paths" name="sourcePaths" placeholder="products/chair_3d.glb&#10;products/table_3d.fbxz"></textarea>
+        <div class="field-help">Optional for the gallery; required for the transformation lab. Enter one model delivery path per line, including <strong>.glb</strong>, <strong>.gltz</strong>, or <strong>.fbxz</strong>.</div>
+      </div>
+      <div class="config-note"><strong>Cloudinary setup:</strong> upload models as Image assets using delivery type <strong>upload</strong>, and enable client-side asset lists (clear the <strong>Resource List</strong> restriction). This demo converts GLTZ sources on delivery with <strong>f_glb</strong>. ZIP-based transformations also require “Allow delivery of PDF and ZIP files” in your security settings.</div>
+      <div class="config-actions">
+        <button class="secondary" id="use-demo" type="button">Use public sample</button>
+        <button class="save-config" type="submit">Render my gallery</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const ACCESS_HASH = '52f120d579ad1267a039c3d23e4888e94bb01a2bb945ac7a03b230af2e89ac93';
+    const textureVariants = {
+      carbon: { label: 'Carbon black', publicId: 'arx1-carbon-black_z6fklc' },
+      silver: { label: 'Silver', publicId: 'arx1-silver_bju4mf' },
+      crimson: { label: 'Crimson', publicId: 'arx1-crimson_ajvbyz' }
+    };
+    const state = { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false, sourceIndex: 0, finish: 'carbon' };
+    const sampleConfig = {
+      cloudName: 'demo',
+      images: ['cld-sample'],
+      videos: ['dog'],
+      models: ['DamagedHelmet3D'],
+      spins: [],
+      sourcePaths: ['DamagedHelmet3D.gltz']
+    };
+    const defaultConfig = {
+      cloudName: 'doxfstysv',
+      images: ['tag:f9demo'],
+      videos: ['tag:f9demo'],
+      models: ['DamagedHelmet3D_htkxiw'],
+      spins: ['arx1-helmet-360'],
+      sourcePaths: ['DamagedHelmet3D_htkxiw.gltz']
+    };
+    const cloneConfig = (config) => ({ ...config, images: [...config.images], videos: [...config.videos], models: [...config.models], spins: [...config.spins], sourcePaths: [...config.sourcePaths] });
+    let assetConfig = cloneConfig(defaultConfig);
+    let gallery;
+    let renderTimer;
+    let modelLoadTimer;
+
+    const $ = (selector) => document.querySelector(selector);
+    const preview = $('#preview-media');
+    const loader = $('#preview-loader');
+    const deliveryUrl = $('#delivery-url');
+
+    function showToast(message) {
+      const toast = $('#toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 1700);
+    }
+
+    function loadAssetConfig() {
+      const params = new URLSearchParams(location.search);
+      const stored = (() => { try { return JSON.parse(localStorage.getItem('cloudinaryMixedMediaConfigV5')); } catch (_) { return null; } })();
+      const candidate = {
+        cloudName: params.get('cloud') || stored?.cloudName,
+        images: params.has('images') ? params.get('images').split(',') : stored?.images,
+        videos: params.has('videos') ? params.get('videos').split(',') : stored?.videos,
+        models: params.get('models')?.split(',') || stored?.models || stored?.publicIds,
+        spins: params.has('spins') ? params.get('spins').split(',') : stored?.spins,
+        sourcePaths: params.get('sources')?.split(',') || (params.get('source') ? [params.get('source')] : null) || stored?.sourcePaths || (stored?.sourcePath ? [stored.sourcePath] : [])
+      };
+      if (candidate.cloudName && Array.isArray(candidate.models) && candidate.models.length) {
+        assetConfig = {
+          cloudName: candidate.cloudName,
+          images: (candidate.images || []).filter(Boolean),
+          videos: (candidate.videos || []).filter(Boolean),
+          models: candidate.models.filter(Boolean),
+          spins: (candidate.spins || []).filter(Boolean),
+          sourcePaths: (candidate.sourcePaths || []).filter(Boolean)
+        };
+      }
+    }
+
+    function assetCount() {
+      return assetConfig.images.length + assetConfig.videos.length + assetConfig.models.length + assetConfig.spins.length;
+    }
+
+    function syncConfigUI() {
+      $('#cloud-name').value = assetConfig.cloudName;
+      $('#image-ids').value = assetConfig.images.join('\n');
+      $('#video-ids').value = assetConfig.videos.join('\n');
+      $('#model-ids').value = assetConfig.models.join('\n');
+      $('#spin-tags').value = assetConfig.spins.join('\n');
+      $('#source-paths').value = assetConfig.sourcePaths.join('\n');
+      populateSourceSelector();
+      const count = assetCount();
+      $('#asset-status').textContent = assetConfig.cloudName + ' · ' + count + (count === 1 ? ' media source' : ' media sources');
+    }
+
+    function saveAssetConfig() {
+      try { localStorage.setItem('cloudinaryMixedMediaConfigV5', JSON.stringify(assetConfig)); } catch (_) {}
+      const params = new URLSearchParams();
+      params.set('cloud', assetConfig.cloudName);
+      if (assetConfig.images.length) params.set('images', assetConfig.images.join(','));
+      if (assetConfig.videos.length) params.set('videos', assetConfig.videos.join(','));
+      params.set('models', assetConfig.models.join(','));
+      if (assetConfig.spins.length) params.set('spins', assetConfig.spins.join(','));
+      if (assetConfig.sourcePaths.length) params.set('sources', assetConfig.sourcePaths.join(','));
+      history.replaceState(null, '', location.pathname + '?' + params.toString() + location.hash);
+    }
+
+    function galleryAsset(value, mediaType, forceTag = false) {
+      const isTag = forceTag || value.toLowerCase().startsWith('tag:');
+      const identifier = isTag ? value.replace(/^tag:/i, '') : value;
+      const asset = isTag ? { tag: identifier, mediaType } : { publicId: identifier, mediaType };
+      if (mediaType === '3d') {
+        const variant = activeTextureVariant();
+        asset.transformation = variant ? {
+          transformation: [
+            { variables: [['$finish', 'ref:!' + variant.publicId.replace(/\//g, ':') + '!']] },
+            { effect: 'swap_image:image_$finish;index_0' },
+            { fetch_format: 'glb' }
+          ]
+        } : { fetch_format: 'glb' };
+      }
+      return asset;
+    }
+
+    function galleryAssets() {
+      return [
+        ...assetConfig.images.map((value) => galleryAsset(value, 'image')),
+        ...assetConfig.videos.map((value) => galleryAsset(value, 'video')),
+        ...assetConfig.models.map((value) => galleryAsset(value, '3d')),
+        ...assetConfig.spins.map((value) => galleryAsset(value, 'spin', true))
+      ];
+    }
+
+    function sourceLabel(path) {
+      const file = path.split('/').pop() || path;
+      if (/DamagedHelmet/i.test(file)) return 'Damaged Helmet · GLTZ';
+      const extension = file.split('.').pop()?.toUpperCase() || '3D';
+      return file.replace(/\.[^.]+$/, '') + ' · ' + extension;
+    }
+
+    function populateSourceSelector() {
+      const select = $('#model-source-select');
+      select.innerHTML = '';
+      assetConfig.sourcePaths.forEach((path, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = sourceLabel(path);
+        select.appendChild(option);
+      });
+      if (!assetConfig.sourcePaths.length) {
+        const option = document.createElement('option');
+        option.value = '0';
+        option.textContent = 'Add a source path in “Use my assets”';
+        select.appendChild(option);
+      }
+      state.sourceIndex = Math.min(state.sourceIndex, Math.max(assetConfig.sourcePaths.length - 1, 0));
+      select.value = String(state.sourceIndex);
+      $('#model-count').textContent = assetConfig.sourcePaths.length + (assetConfig.sourcePaths.length === 1 ? ' model' : ' models');
+      update3dOutputLabel();
+    }
+
+    function selectedSourceIsFbx() {
+      return /\.fbxz?$/i.test(assetConfig.sourcePaths[state.sourceIndex] || '');
+    }
+
+    function update3dOutputLabel() {
+      $('#format-3d-tab').textContent = selectedSourceIsFbx() ? 'USDZ output' : 'GLB + Draco';
+    }
+
+    function initializeGallery(startIndex = 0) {
+      const loading = $('#gallery-loading');
+      clearTimeout(modelLoadTimer);
+      loading.style.display = 'grid';
+      loading.innerHTML = '<div><div class="spinner"></div><strong>Loading mixed-media gallery</strong><br><small>Powered by Cloudinary Product Gallery</small></div>';
+      if (gallery?.destroy) { try { gallery.destroy(); } catch (_) {} }
+      gallery = null;
+      $('#product-gallery').innerHTML = '';
+      if (!window.cloudinary || !window.cloudinary.galleryWidget) {
+        loading.innerHTML = '<div><strong>Gallery script could not load.</strong><br><small>Open this page with an internet connection to run the live widget.</small></div>';
+        return;
+      }
+
+      try {
+        gallery = window.cloudinary.galleryWidget({
+          container: '#product-gallery',
+          cloudName: assetConfig.cloudName,
+          mediaAssets: galleryAssets(),
+          ar3dProps: { autoRotate: true, shadows: true, showZoomButtons: true },
+          aspectRatio: '4:3',
+          carouselStyle: assetCount() > 1 ? 'thumbnails' : 'none',
+          carouselLocation: 'left',
+          preload: [],
+          startIndex
+        });
+        gallery.on('thumbclick', (data) => {
+          clearTimeout(modelLoadTimer);
+          const label = String(data?.label || '');
+          const isModel = assetConfig.models.some((model) => label === model.replace(/^tag:/i, ''));
+          if (!isModel) {
+            $('#gallery-notice').classList.remove('show');
+            return;
+          }
+          modelLoadTimer = setTimeout(() => {
+            $('#gallery-notice').classList.add('show');
+          }, 30000);
+        });
+        gallery.on('3dmodelloaded', () => {
+          clearTimeout(modelLoadTimer);
+          $('#gallery-notice').classList.remove('show');
+        });
+        gallery.render();
+        setTimeout(() => { loading.style.display = 'none'; }, 1700);
+      } catch (error) {
+        loading.innerHTML = '<div><strong>Unable to initialize the live gallery.</strong><br><small>' + String(error.message || error) + '</small></div>';
+      }
+    }
+
+    function cameraEffect(includeFrames = false) {
+      const parts = [
+        'up_' + state.up,
+        'right_' + state.right,
+        'zoom_' + Number(state.zoom).toFixed(1),
+        'env_' + state.env,
+        'exposure_' + Number(state.exposure).toFixed(1)
+      ];
+      if (includeFrames) parts.push('frames_24');
+      return 'e_camera:' + parts.join(';');
+    }
+
+    function activeTextureVariant() {
+      const selectedSource = assetConfig.sourcePaths[state.sourceIndex] || '';
+      const variant = textureVariants[state.finish];
+      if (!variant || assetConfig.cloudName !== 'doxfstysv' || !/DamagedHelmet3D_htkxiw/i.test(selectedSource)) return null;
+      return variant;
+    }
+
+    function textureTransformation() {
+      const variant = activeTextureVariant();
+      if (!variant) return '';
+      const reference = variant.publicId.replace(/\//g, ':');
+      return '$finish_ref:!' + reference + '!/e_swap_image:image_$finish;index_0';
+    }
+
+    function updateGalleryFinish() {
+      const activeIndex = gallery?.getActiveIndex?.();
+      initializeGallery(Number.isInteger(activeIndex) ? activeIndex : 0);
+    }
+
+    function buildUrl() {
+      const selectedSource = assetConfig.sourcePaths[state.sourceIndex];
+      if (!selectedSource) return '';
+      const base = 'https://res.cloudinary.com/' + assetConfig.cloudName + '/image/upload/';
+      const source = selectedSource.split('/').map(encodeURIComponent).join('/');
+      const texture = textureTransformation();
+      const texturePrefix = texture ? texture + '/' : '';
+      const light = state.light && state.mode !== 'glb' ? '/e_light' : '';
+      if (state.mode === 'webp') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_webp,fl_animated,q_auto/' + source;
+      if (state.mode === 'mp4') return base + texturePrefix + 'c_scale,w_800/' + cameraEffect(true) + light + '/f_mp4,fl_animated,q_auto/' + source;
+      if (state.mode === 'glb') return selectedSourceIsFbx() ? base + texturePrefix + 'f_usdz/' + source : base + texturePrefix + 'fl_draco/f_glb/' + source;
+      return base + texturePrefix + 'c_scale,w_1100/' + cameraEffect(false) + light + '/f_jpg,q_auto/' + source;
+    }
+
+    function formatCard() {
+      if (selectedSourceIsFbx()) {
+        return '<article class="format-card">' +
+          '<div class="format-icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 7 9 5 9-5v10l-9 5-9-5V7Z"/><path d="M12 12v10"/></svg></div>' +
+          '<h3>AR-ready USDZ delivery</h3><p>The uploaded FBX package is converted on delivery to USDZ for Apple Quick Look and AR experiences.</p>' +
+          '<div class="format-list"><div><span>Transformation</span><strong>f_usdz</strong></div><div><span>Output</span><strong>USDZ</strong></div><div><span>Use case</span><strong>iOS / AR</strong></div></div>' +
+        '</article>';
+      }
+      return '<article class="format-card">' +
+        '<div class="format-icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 7 9 5 9-5v10l-9 5-9-5V7Z"/><path d="M12 12v10"/></svg></div>' +
+        '<h3>Optimized GLB delivery</h3><p>The source glTF package is converted for direct GLB delivery with Draco mesh compression enabled.</p>' +
+        '<div class="format-list"><div><span>Transformation</span><strong>fl_draco</strong></div><div><span>Output</span><strong>GLB</strong></div><div><span>Use case</span><strong>Web 3D / AR</strong></div></div>' +
+      '</article>';
+    }
+
+    function renderPreview() {
+      const url = buildUrl();
+      const badge = $('#derived-badge');
+      const meta = $('#preview-meta');
+      loader.classList.remove('visible');
+      preview.innerHTML = '';
+
+      if (!url) {
+        deliveryUrl.textContent = 'Add one 3D source path to generate a delivery URL.';
+        badge.textContent = 'Tagged gallery connected';
+        meta.textContent = '3D source public ID required';
+        preview.innerHTML = '<article class="format-card"><div class="format-icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 7 9 5 9-5v10l-9 5-9-5V7Z"/><path d="M12 12v10"/></svg></div><h3>Gallery connected to f9demo</h3><p>Your tagged images, videos, and 3D models load above. To activate this transformation lab, open “Use my assets” and enter one tagged model\'s source path, including .glb or .gltz.</p></article>';
+        return;
+      }
+
+      deliveryUrl.textContent = url;
+
+      if (state.mode === 'glb') {
+        badge.textContent = selectedSourceIsFbx() ? 'Converted 3D asset' : 'Optimized 3D asset';
+        meta.textContent = selectedSourceIsFbx() ? 'f_usdz' : 'fl_draco · f_glb';
+        preview.innerHTML = formatCard();
+        return;
+      }
+
+      loader.classList.add('visible');
+      const media = document.createElement(state.mode === 'mp4' ? 'video' : 'img');
+      media.alt = 'Cloudinary-derived view of the 3D helmet model';
+      if (state.mode === 'mp4') {
+        media.autoplay = true; media.loop = true; media.muted = true; media.playsInline = true; media.controls = true;
+        badge.textContent = 'Derived MP4 · 24 frames';
+      } else if (state.mode === 'webp') {
+        badge.textContent = 'Derived WebP · 24 frames';
+      } else {
+        badge.textContent = 'Derived JPG · live';
+      }
+      meta.textContent = cameraEffect(state.mode !== 'jpg') + ' · f_' + state.mode;
+      media.addEventListener('load', () => loader.classList.remove('visible'));
+      media.addEventListener('loadeddata', () => loader.classList.remove('visible'));
+      media.addEventListener('error', () => {
+        loader.classList.remove('visible');
+        preview.innerHTML = '<article class="format-card"><h3>First render is still processing</h3><p>New 3D transformations can take a few seconds to generate. The same URL is then cached on Cloudinary\'s CDN for subsequent requests.</p></article>';
+      });
+      media.src = url;
+      preview.appendChild(media);
+    }
+
+    function scheduleRender() {
+      clearTimeout(renderTimer);
+      renderTimer = setTimeout(renderPreview, 260);
+    }
+
+    function bindRange(id, key, suffix) {
+      const input = $('#' + id);
+      const output = $('#' + id + '-value');
+      input.addEventListener('input', () => {
+        state[key] = Number(input.value);
+        output.textContent = input.value + suffix;
+        scheduleRender();
+      });
+    }
+
+    function initializeDemo() {
+      loadAssetConfig();
+      syncConfigUI();
+      initializeGallery();
+      renderPreview();
+      bindRange('right', 'right', '°');
+      bindRange('up', 'up', '°');
+      bindRange('zoom', 'zoom', '×');
+      bindRange('exposure', 'exposure', '');
+
+      $('#environment').addEventListener('change', (event) => { state.env = event.target.value; scheduleRender(); });
+      $('#model-source-select').addEventListener('change', (event) => { state.sourceIndex = Number(event.target.value); update3dOutputLabel(); renderPreview(); });
+
+      document.querySelectorAll('.format-tab').forEach((button) => button.addEventListener('click', () => {
+        document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.remove('active'));
+        button.classList.add('active');
+        state.mode = button.dataset.mode;
+        renderPreview();
+      }));
+
+      $('#light-toggle').addEventListener('click', (event) => {
+        state.light = event.currentTarget.getAttribute('aria-pressed') !== 'true';
+        event.currentTarget.setAttribute('aria-pressed', String(state.light));
+        renderPreview();
+      });
+
+      $('#copy-url').addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(deliveryUrl.textContent); }
+        catch (_) {
+          const range = document.createRange(); range.selectNode(deliveryUrl); window.getSelection().removeAllRanges(); window.getSelection().addRange(range);
+        }
+        showToast('Delivery URL copied');
+      });
+
+      $('#reset-controls').addEventListener('click', () => {
+        Object.assign(state, { mode: 'jpg', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false });
+        [['right',25,'°'],['up',8,'°'],['zoom',1.1,'×'],['exposure',1,'']].forEach(([id,value,suffix]) => {
+          $('#' + id).value = value; $('#' + id + '-value').textContent = value + suffix;
+        });
+        $('#environment').value = 'neutral';
+        $('#light-toggle').setAttribute('aria-pressed', 'false');
+        document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.mode === 'jpg'));
+        renderPreview();
+      });
+
+      $('#lab-jump').addEventListener('click', () => $('#transformation-lab').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      $('#open-config').addEventListener('click', () => { syncConfigUI(); $('#config-dialog').showModal(); });
+      $('#close-config').addEventListener('click', () => $('#config-dialog').close());
+      $('#config-dialog').addEventListener('click', (event) => { if (event.target === event.currentTarget) event.currentTarget.close(); });
+      $('#config-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const parseList = (selector, extensions = false) => $(selector).value.split(/[\n,]+/).map((value) => {
+          const clean = value.trim();
+          return extensions && !clean.toLowerCase().startsWith('tag:') ? clean.replace(/\.(jpg|jpeg|png|webp|avif|gif|mp4|mov|webm|glb|gltf|gltz|fbxz|usdz)$/i, '') : clean;
+        }).filter(Boolean);
+        const models = parseList('#model-ids', true);
+        if (!models.length) return;
+        assetConfig = {
+          cloudName: $('#cloud-name').value.trim(),
+          images: parseList('#image-ids', true),
+          videos: parseList('#video-ids', true),
+          models,
+          spins: parseList('#spin-tags'),
+          sourcePaths: parseList('#source-paths')
+        };
+        saveAssetConfig(); syncConfigUI(); initializeGallery(); renderPreview(); $('#config-dialog').close(); showToast('Gallery connected to ' + assetConfig.cloudName);
+      });
+      $('#use-demo').addEventListener('click', () => {
+        assetConfig = cloneConfig(sampleConfig);
+        saveAssetConfig(); syncConfigUI(); initializeGallery(); renderPreview(); $('#config-dialog').close(); showToast('Public sample loaded');
+      });
+      document.querySelectorAll('.swatch').forEach((swatch) => swatch.addEventListener('click', () => {
+        state.finish = swatch.dataset.finish;
+        document.querySelectorAll('.swatch').forEach((item) => {
+          const selected = item === swatch;
+          item.classList.toggle('active', selected);
+          item.setAttribute('aria-pressed', String(selected));
+        });
+        $('#finish-value').textContent = textureVariants[state.finish].label;
+        updateGalleryFinish();
+        renderPreview();
+        showToast(textureVariants[state.finish].label + ' texture applied');
+      }));
+    }
+
+    async function hashAccessCode(value) {
+      if (!window.crypto?.subtle) throw new Error('Secure browser context required');
+      const bytes = new TextEncoder().encode(value);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+    }
+
+    function initializeAccessGate(onUnlocked) {
+      const gate = $('#access-gate');
+      const form = $('#access-form');
+      const input = $('#access-password');
+      const status = $('#access-status');
+      let initialized = false;
+      const unlock = () => {
+        document.body.classList.remove('access-locked');
+        gate.hidden = true;
+        if (!initialized) { initialized = true; onUnlocked(); }
+      };
+      if (sessionStorage.getItem('arx1DemoAccess') === ACCESS_HASH) {
+        unlock();
+        return;
+      }
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        status.textContent = '';
+        try {
+          const candidate = await hashAccessCode(input.value);
+          if (candidate !== ACCESS_HASH) {
+            status.textContent = 'That access code is not valid.';
+            input.select();
+            return;
+          }
+          sessionStorage.setItem('arx1DemoAccess', ACCESS_HASH);
+          unlock();
+        } catch (_) {
+          status.textContent = 'Open this demo over HTTPS or localhost to use the access gate.';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => initializeAccessGate(initializeDemo));
+  </script>
+</body>
+</html>
