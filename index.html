@@ -196,24 +196,6 @@
       text-align: center;
       pointer-events: none;
     }
-    .gallery-notice {
-      position: absolute;
-      right: 18px;
-      top: 18px;
-      z-index: 5;
-      display: none;
-      width: min(350px, calc(100% - 140px));
-      padding: 11px 13px;
-      border: 1px solid #f1c891;
-      border-radius: 9px;
-      color: #674315;
-      background: #fff8ec;
-      box-shadow: 0 10px 28px rgba(9,27,44,.12);
-      font-size: 10px;
-      line-height: 1.45;
-      pointer-events: none;
-    }
-    .gallery-notice.show { display: block; }
     .spinner {
       width: 30px;
       height: 30px;
@@ -494,7 +476,6 @@
             <div><div class="spinner"></div><strong>Loading interactive 3D model</strong><br><small>Powered by Cloudinary Product Gallery</small></div>
           </div>
           <div id="product-gallery" aria-label="Interactive 3D product viewer"></div>
-          <div class="gallery-notice" id="gallery-notice"><strong>The first GLB conversion is taking longer than expected.</strong><br>This gallery requests <code>f_glb</code> from the existing GLTZ asset. Cloudinary caches the derived GLB after it is generated; you can keep switching between assets while it processes.</div>
         </div>
       </article>
 
@@ -667,7 +648,6 @@
     let assetConfig = cloneConfig(defaultConfig);
     let gallery;
     let renderTimer;
-    let modelLoadTimer;
 
     const $ = (selector) => document.querySelector(selector);
     const preview = $('#preview-media');
@@ -797,7 +777,6 @@
 
     function initializeGallery(startIndex = 0) {
       const loading = $('#gallery-loading');
-      clearTimeout(modelLoadTimer);
       loading.style.display = 'grid';
       loading.innerHTML = '<div><div class="spinner"></div><strong>Loading mixed-media gallery</strong><br><small>Powered by Cloudinary Product Gallery</small></div>';
       if (gallery?.destroy) { try { gallery.destroy(); } catch (_) {} }
@@ -819,22 +798,6 @@
           carouselLocation: 'left',
           preload: [],
           startIndex
-        });
-        gallery.on('thumbclick', (data) => {
-          clearTimeout(modelLoadTimer);
-          const label = String(data?.label || '');
-          const isModel = assetConfig.models.some((model) => label === model.replace(/^tag:/i, ''));
-          if (!isModel) {
-            $('#gallery-notice').classList.remove('show');
-            return;
-          }
-          modelLoadTimer = setTimeout(() => {
-            $('#gallery-notice').classList.add('show');
-          }, 30000);
-        });
-        gallery.on('3dmodelloaded', () => {
-          clearTimeout(modelLoadTimer);
-          $('#gallery-notice').classList.remove('show');
         });
         gallery.render();
         setTimeout(() => { loading.style.display = 'none'; }, 1700);
