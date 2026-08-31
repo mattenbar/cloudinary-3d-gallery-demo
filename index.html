@@ -391,7 +391,7 @@
     .feature-section { margin: 54px 0; padding: clamp(24px, 4vw, 42px); border: 1px solid #e1e7ec; border-radius: var(--radius); background: white; box-shadow: var(--shadow); }
     .feature-section .section-heading { margin-bottom: 24px; }
     .feature-body { display: grid; grid-template-columns: minmax(360px, 1.1fr) minmax(300px, .72fr); gap: 28px; align-items: stretch; }
-    .feature-viewer { position: relative; min-height: 530px; overflow: hidden; border: 1px solid #dce4ea; border-radius: 14px; background: #f5f8fa; }
+    .feature-viewer { position: relative; min-height: 0; aspect-ratio: 8 / 5; overflow: hidden; border: 1px solid #dce4ea; border-radius: 14px; background: #f5f8fa; }
     #texture-gallery, #optimization-gallery { position: absolute; inset: 0; width: 100%; height: 100%; }
     .feature-guide { display: flex; flex-direction: column; padding: 24px; border: 1px solid #dce4ea; border-radius: 14px; background: #fbfcfd; }
     .feature-guide h3 { margin: 0 0 8px; font-size: 22px; letter-spacing: -.035em; }
@@ -402,7 +402,7 @@
     .tech-proof { display: grid; gap: 9px; margin: 8px 0 24px; }
     .tech-proof div { display: flex; justify-content: space-between; gap: 16px; padding-top: 9px; border-top: 1px solid var(--line); font-size: 11px; }
     .tech-proof span { color: #8493a0; }
-    .tech-proof code { color: #25445d; font-size: 10px; text-align: right; }
+    .tech-proof code { color: #25445d; font-size: 10px; text-align: right; overflow-wrap: anywhere; }
     .next-step { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-radius: 10px; color: white; background: var(--navy); font-size: 11px; font-weight: 780; text-decoration: none; }
     .next-step:hover { background: var(--navy-2); }
     .background-stage { position: relative; display: grid; place-items: center; min-height: 530px; overflow: hidden; border: 1px solid #dce4ea; border-radius: 14px; background-color: #eef3f7; background-image: linear-gradient(45deg,#dfe7ed 25%,transparent 25%),linear-gradient(-45deg,#dfe7ed 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#dfe7ed 75%),linear-gradient(-45deg,transparent 75%,#dfe7ed 75%); background-size: 24px 24px; background-position: 0 0,0 12px,12px -12px,-12px 0; }
@@ -412,10 +412,26 @@
     .background-option { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 13px; border: 1px solid #d8e1e8; border-radius: 10px; color: #4f6577; background: white; font-size: 11px; font-weight: 720; }
     .background-option.active { color: var(--blue-deep); border-color: #8fc1fb; background: #edf6ff; }
     .background-option small { color: #8a98a4; font-size: 9px; font-weight: 650; }
+    .background-input { margin-bottom: 18px; padding: 13px; border: 1px solid #dce4ea; border-radius: 10px; background: white; }
+    .background-input label { display: block; margin-bottom: 7px; color: var(--ink); font-size: 11px; font-weight: 760; }
+    .background-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+    .background-input input { min-width: 0; border: 1px solid #d7e0e7; border-radius: 8px; padding: 10px 11px; color: #294257; background: #fbfcfd; font-size: 11px; outline: none; }
+    .background-input input:focus { border-color: #7fb7f7; box-shadow: 0 0 0 3px rgba(23,120,242,.1); }
+    .apply-background { border: 0; border-radius: 8px; padding: 0 14px; color: white; background: var(--blue); font-size: 10px; font-weight: 780; }
+    .background-input small { display: block; margin-top: 7px; color: #82919e; font-size: 9px; line-height: 1.45; }
     .optimization-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 4px 0 24px; }
     .optimization-card { padding: 13px; border: 1px solid #dce4ea; border-radius: 10px; background: white; }
     .optimization-card strong { display: block; margin-bottom: 4px; font-size: 11px; }
     .optimization-card code { color: var(--blue-deep); font-size: 9px; }
+    .size-savings { margin: 0 0 20px; padding: 15px; border: 1px solid #b9dafd; border-radius: 11px; background: #f1f8ff; }
+    .size-savings-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 13px; font-size: 10px; font-weight: 760; }
+    .size-savings-head strong { color: var(--blue-deep); font-size: 20px; letter-spacing: -.04em; }
+    .size-row { display: grid; grid-template-columns: 70px minmax(70px, 1fr) 60px; gap: 9px; align-items: center; margin-top: 8px; color: #6b7d8d; font-size: 9px; }
+    .size-row b { color: #29465e; text-align: right; font-size: 10px; }
+    .size-track { height: 8px; overflow: hidden; border-radius: 999px; background: #dce7f1; }
+    .size-bar { display: block; width: 100%; height: 100%; border-radius: inherit; background: #8397a8; transition: width .35s ease; }
+    .size-bar.optimized { width: 74.2%; background: var(--blue); }
+    .size-note { margin: 10px 0 0; color: #587187; font-size: 9px; line-height: 1.45; }
     .source-gallery { position: absolute; inset: 0; width: 100%; height: 100%; }
     .derived-control.is-disabled { opacity: .46; }
     .derived-control.is-disabled input, .derived-control.is-disabled select, .derived-control.is-disabled button { pointer-events: none; }
@@ -457,6 +473,7 @@
       .transform-controls { order: -1; }
       .lab-head { align-items: flex-start; flex-direction: column; }
       .feature-body { grid-template-columns: 1fr; }
+      .feature-viewer { aspect-ratio: 4 / 3; }
     }
     @media (max-width: 620px) {
       .page { width: min(100% - 22px, 1480px); }
@@ -621,8 +638,8 @@
 
     <section class="feature-section capability-section" id="background-capability" aria-labelledby="background-title">
       <div class="section-heading">
-        <div class="section-heading-copy"><div class="step-kicker">Step 3 · Backgrounds and compositing</div><h2 id="background-title">Turn the 3D model into a campaign scene</h2></div>
-        <p>Cloudinary renders the model with transparency, crops the racetrack to the output canvas, and applies it as an image underlay.</p>
+        <div class="section-heading-copy"><div class="step-kicker">Step 3 · Backgrounds for derived stills</div><h2 id="background-title">Turn the 3D model into a campaign scene</h2></div>
+        <p>For JPG and PNG outputs, Cloudinary renders the model with transparency and applies any uploaded image as an underlay.</p>
       </div>
       <div class="feature-body">
         <div class="background-stage">
@@ -630,11 +647,19 @@
           <img id="background-preview" alt="Cloudinary-derived ARX-1 helmet campaign image" />
         </div>
         <div class="feature-guide">
-          <div class="guided-action"><strong>Customer action</strong>Choose Transparent PNG to expose the cutout, then select Racetrack pit lane to place it into the final scene.</div>
+          <div class="guided-action"><strong>Customer action</strong>Choose Transparent PNG to expose the cutout, then enter another background public ID and select Apply.</div>
           <h3>Background output</h3>
-          <p>These are delivered assets generated from the 3D source—not CSS backgrounds added by this page.</p>
+          <p>Background replacement applies to 3D-derived still images. The final composition is delivered by Cloudinary—not added with page CSS.</p>
+          <div class="background-input">
+            <label for="background-public-id">Background image public ID</label>
+            <div class="background-input-row">
+              <input id="background-public-id" type="text" value="arx1-racetrack_kjslp4" autocomplete="off" spellcheck="false" />
+              <button class="apply-background" id="apply-background" type="button">Apply</button>
+            </div>
+            <small>Enter an uploaded Image asset from the active Cloudinary product environment. Do not include the file extension.</small>
+          </div>
           <div class="background-options" aria-label="Campaign background options">
-            <button class="background-option active" data-background="racetrack" type="button"><span>Racetrack pit lane</span><small>u_racetrack</small></button>
+            <button class="background-option active" data-background="racetrack" type="button"><span>Racetrack preset</span><small>u_racetrack</small></button>
             <button class="background-option" data-background="transparent" type="button"><span>Transparent PNG</span><small>f_png</small></button>
             <button class="background-option" data-background="studio" type="button"><span>Studio white</span><small>f_jpg</small></button>
           </div>
@@ -726,6 +751,12 @@
           <div class="guided-action"><strong>Customer action</strong>Rotate and zoom the final model. Explain that this interactive experience is delivered from the transformed source through Cloudinary's CDN.</div>
           <h3>One source, multiple outputs</h3>
           <p>Select output formats in Step 4 while keeping one master model in the DAM.</p>
+          <div class="size-savings" aria-live="polite">
+            <div class="size-savings-head"><span>Measured GLB delivery</span><strong id="optimization-saving">26% smaller</strong></div>
+            <div class="size-row"><span>Standard GLB</span><span class="size-track"><i class="size-bar"></i></span><b id="standard-glb-size">1.89 MB</b></div>
+            <div class="size-row"><span>Draco GLB</span><span class="size-track"><i class="size-bar optimized" id="optimized-size-bar"></i></span><b id="optimized-glb-size">1.40 MB</b></div>
+            <p class="size-note" id="optimization-size-note">0.49 MB saved per model delivery. Values are read from the live Cloudinary responses.</p>
+          </div>
           <div class="optimization-grid">
             <div class="optimization-card"><strong>Web 3D</strong><code>f_glb · fl_draco</code></div>
             <div class="optimization-card"><strong>Apple AR</strong><code>f_usdz</code></div>
@@ -801,6 +832,7 @@
     };
     const state = { mode: 'viewer', right: 25, up: 8, zoom: 1.1, exposure: 1, env: 'neutral', light: false, sourceIndex: 0, finish: 'carbon' };
     let backgroundState = 'racetrack';
+    let customBackgroundPublicId = campaignBackgrounds.racetrack.publicId;
     const sampleConfig = {
       cloudName: 'demo',
       images: ['cld-sample'],
@@ -823,6 +855,7 @@
     let textureGallery;
     let transformSourceGallery;
     let optimizationGallery;
+    let optimizationMeasureVersion = 0;
     let renderTimer;
 
     const $ = (selector) => document.querySelector(selector);
@@ -1009,7 +1042,8 @@
           cloudName: assetConfig.cloudName,
           mediaAssets: [asset],
           ar3dProps: { autoRotate: true, shadows: true, showZoomButtons: true },
-          aspectRatio: '1:1',
+          aspectRatio: '8:5',
+          viewportBreakpoints: [{ breakpoint: 720, aspectRatio: '4:3' }],
           carouselStyle: 'none',
           preload: []
         });
@@ -1067,6 +1101,7 @@
       initializeOptimizationGallery();
       if (state.mode === 'viewer') renderPreview();
       renderBackgroundDemo();
+      measureOptimizationSavings();
     }
 
     function buildBackgroundUrl(mode = backgroundState) {
@@ -1078,8 +1113,9 @@
       const prefix = texture ? texture + '/' : '';
       const render = 'c_scale,w_1000/e_camera:up_8;right_25;zoom_1.1;env_neutral;exposure_1.0/';
       if (mode === 'transparent') return base + prefix + render + 'f_png/' + source;
-      if (mode === 'racetrack') {
-        const background = campaignBackgrounds.racetrack.publicId.replace(/\//g, ':');
+      if (mode === 'racetrack' || mode === 'custom') {
+        const publicId = mode === 'custom' ? customBackgroundPublicId : campaignBackgrounds.racetrack.publicId;
+        const background = publicId.replace(/\//g, ':');
         return base + prefix + render + 'f_png/b_transparent/u_' + background + '/c_fill,w_1000,h_1000/fl_layer_apply/f_jpg,q_auto/' + source;
       }
       return base + prefix + render + 'f_jpg,q_auto/' + source;
@@ -1094,9 +1130,56 @@
       image.onload = () => { loading.style.display = 'none'; };
       image.onerror = () => { loading.innerHTML = '<div><strong>Background render is still processing.</strong></div>'; };
       image.src = url;
-      document.querySelectorAll('.background-option').forEach((button) => button.classList.toggle('active', button.dataset.background === backgroundState));
-      const proof = backgroundState === 'racetrack' ? 'b_transparent · u_racetrack' : backgroundState === 'transparent' ? 'f_png · alpha' : 'f_jpg · q_auto';
+      document.querySelectorAll('.background-option').forEach((button) => {
+        const selected = button.dataset.background === backgroundState;
+        button.classList.toggle('active', selected);
+        button.setAttribute('aria-pressed', String(selected));
+      });
+      const proof = backgroundState === 'racetrack' ? 'b_transparent · u_racetrack' : backgroundState === 'custom' ? 'b_transparent · u_' + customBackgroundPublicId : backgroundState === 'transparent' ? 'f_png · alpha' : 'f_jpg · q_auto';
       $('#background-proof').textContent = proof;
+    }
+
+    function buildOptimizationUrls() {
+      const selectedSource = assetConfig.sourcePaths[state.sourceIndex];
+      if (!selectedSource || selectedSourceIsFbx()) return null;
+      const base = 'https://res.cloudinary.com/' + assetConfig.cloudName + '/image/upload/';
+      const source = selectedSource.split('/').map(encodeURIComponent).join('/');
+      const texture = textureTransformation();
+      const prefix = texture ? texture + '/' : '';
+      return {
+        standard: base + prefix + 'f_glb/' + source,
+        optimized: base + prefix + 'fl_draco/f_glb/' + source
+      };
+    }
+
+    function formatDeliverySize(bytes) {
+      return (bytes / 1048576).toFixed(2) + ' MB';
+    }
+
+    async function measureOptimizationSavings() {
+      const urls = buildOptimizationUrls();
+      if (!urls) return;
+      const version = ++optimizationMeasureVersion;
+      try {
+        const [standardResponse, optimizedResponse] = await Promise.all([
+          fetch(urls.standard, { method: 'HEAD' }),
+          fetch(urls.optimized, { method: 'HEAD' })
+        ]);
+        const standard = Number(standardResponse.headers.get('content-length'));
+        const optimized = Number(optimizedResponse.headers.get('content-length'));
+        if (!standardResponse.ok || !optimizedResponse.ok || !standard || !optimized) throw new Error('Size headers unavailable');
+        if (version !== optimizationMeasureVersion) return;
+        const saved = Math.max(standard - optimized, 0);
+        const percent = Math.round((saved / standard) * 100);
+        $('#standard-glb-size').textContent = formatDeliverySize(standard);
+        $('#optimized-glb-size').textContent = formatDeliverySize(optimized);
+        $('#optimization-saving').textContent = percent + '% smaller';
+        $('#optimized-size-bar').style.width = Math.min((optimized / standard) * 100, 100).toFixed(1) + '%';
+        $('#optimization-size-note').textContent = formatDeliverySize(saved) + ' saved per model delivery. Values are read from the live Cloudinary responses.';
+      } catch (_) {
+        if (version !== optimizationMeasureVersion) return;
+        $('#optimization-size-note').textContent = 'Baseline carbon measurement shown. Live size headers are temporarily unavailable.';
+      }
     }
 
     function buildUrl() {
@@ -1214,6 +1297,7 @@
       initializeTextureGallery();
       initializeOptimizationGallery();
       renderBackgroundDemo();
+      measureOptimizationSavings();
     }
 
     function initializeTourNavigation() {
@@ -1250,9 +1334,31 @@
 
       document.querySelectorAll('.background-option').forEach((button) => button.addEventListener('click', () => {
         backgroundState = button.dataset.background;
+        if (backgroundState === 'racetrack') {
+          customBackgroundPublicId = campaignBackgrounds.racetrack.publicId;
+          $('#background-public-id').value = customBackgroundPublicId;
+        }
         renderBackgroundDemo();
         showToast(button.querySelector('span').textContent + ' background applied');
       }));
+
+      $('#apply-background').addEventListener('click', () => {
+        const input = $('#background-public-id');
+        const publicId = input.value.trim().replace(/\.(avif|gif|jpe?g|png|webp)$/i, '');
+        if (!publicId || !/^[A-Za-z0-9_./-]+$/.test(publicId)) {
+          showToast('Enter a valid Cloudinary image public ID');
+          input.focus();
+          return;
+        }
+        customBackgroundPublicId = publicId;
+        input.value = publicId;
+        backgroundState = 'custom';
+        renderBackgroundDemo();
+        showToast('Custom background applied');
+      });
+      $('#background-public-id').addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') { event.preventDefault(); $('#apply-background').click(); }
+      });
 
       document.querySelectorAll('.format-tab').forEach((button) => button.addEventListener('click', () => {
         document.querySelectorAll('.format-tab').forEach((tab) => tab.classList.remove('active'));
