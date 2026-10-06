@@ -8,10 +8,11 @@ A single-page Cloudinary demonstration combining:
 - Live Carbon Black, Silver, and Crimson texture replacement
 - JPG, animated WebP, MP4, GLB, and USDZ delivery examples
 - Camera, lighting, exposure, and Draco compression controls
+- An interactive 3D model over switchable campaign backgrounds
 
 ## Run locally
 
-Serve the repository over HTTP so the browser can use the Web Crypto API:
+Serve the repository over HTTP:
 
 ```bash
 python3 -m http.server 8765
@@ -23,12 +24,6 @@ Then open `http://127.0.0.1:8765/`.
 
 The repository is designed to publish directly from the root of the `main`
 branch with GitHub Pages.
-
-## Access gate
-
-The access-code screen is a lightweight client-side gate intended to discourage
-casual access. It is not secure authentication and must not protect sensitive
-information.
 
 ## Cloudinary configuration
 
